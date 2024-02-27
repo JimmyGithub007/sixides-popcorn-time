@@ -9,9 +9,11 @@ const options = {
     },
 }
 
-const getMovies = async (page: number) => {
+const getMovies = async (page: number, genreIds: number[], starNum: number, sortId: string) => {
     try {
-        const resp = await fetch(`${API_URL}movie/popular?page=${page}`, options)
+        console.log(starNum)
+        const resp = await fetch(`${API_URL}discover/movie?page=${page}&with_genres=${genreIds.join("|")}&vote_average.gte=${starNum*2}.0&sort_by=${sortId}`, options)
+        console.log(genreIds)
         return await resp.json();
     } catch (error) {
         console.error('Error fetching movies:', error);

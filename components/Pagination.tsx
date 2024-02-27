@@ -1,3 +1,4 @@
+'use client';
 import Link from "next/link";
 import { useMemo } from "react";
 
@@ -15,7 +16,7 @@ const Pagination = (props: Props) => {
             memoPages.push(p);
         }
         return memoPages;
-    }, [props.current_page])
+    }, [props.current_page, props.total_pages])
 
     return (<div className="flex gap-2 p-4">
         { props.current_page > 1 && <Link href={`/movie/p/${props.current_page-1}`}><button className="border-black border-2 bg-white text-black shadow-lg w-40 h-8 rounded-sm font-bold hover:bg-black hover:text-white transition-colors duration-200">PREVIOUS PAGE</button></Link> }
