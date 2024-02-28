@@ -1,5 +1,6 @@
 "use client";
 
+import { TbUserQuestion } from "react-icons/tb";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IoIosClose } from "react-icons/io";
@@ -63,7 +64,10 @@ const Modal = () => {
                                 {
                                     casts?.map(value => (
                                         <div className="flex flex-col gap-1 pt-2 text-sm" key={value.id}>
-                                            <img className="rounded-md shadow-lg shadow-slate-800" src={`${process.env.NEXT_PUBLIC_POSTER_API}w138_and_h175_face/${value.profile_path}`} />
+                                            { value.profile_path ? 
+                                                <img className="rounded-md shadow-lg shadow-slate-800" src={`${process.env.NEXT_PUBLIC_POSTER_API}w138_and_h175_face/${value.profile_path}`} /> : 
+                                                <TbUserQuestion className="w-[100px] h-[126.8px]" />
+                                            }
                                             <div className="text-slate-400 w-[100px]">{value.character}</div>
                                             <div className="font-bold w-[100px]">{value.name}</div>
                                         </div>

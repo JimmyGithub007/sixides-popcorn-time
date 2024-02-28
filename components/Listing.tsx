@@ -33,7 +33,7 @@ const Listing = (params: Props) => {
 
     return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-272px)] justify-center">
         {   !loading && movies ?
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 {
                     movies?.map((value: movieStatesProps, key:number) => 
                         <div key={value.id} className={`w-[220px] animate-opacity`}>

@@ -46,9 +46,9 @@ const Filter = (props: Props) => {
         getGenresAPI();
     }, [])
 
-    return (<div className={`fixed h-full overflow-x-hidden duration-300 w-[250px] ${props.collapse ? "left-0" : "-left-[250px]"}`}>
-        <div className="flex flex-col gap-2 p-2 rounded-md">
-        <div className="flex gap-1 items-center text-red-500"><BiSolidCategoryAlt /><span className="font-bold">Genres</span></div>
+    return (<div className={`fixed h-full overflow-x-hidden duration-300 w-screen md:w-[250px] ${props.collapse ? "left-0" : "-left-full md:-left-[250px]"}`}>
+        <div className="flex flex-col gap-2 p-2">
+            <div className="flex gap-1 items-center text-red-500"><BiSolidCategoryAlt /><span className="font-bold">Genres</span></div>
             <div className="flex flex-wrap gap-2">
                 {
                     genres?.map((value: Genres) => 
@@ -57,8 +57,8 @@ const Filter = (props: Props) => {
                 }
             </div>
         </div>
-        <div className="flex flex-col gap-2 p-2 rounded-md">
-        <div className="flex gap-1 items-center text-red-500"><FcRating /><span className="font-bold">Rating</span></div>
+        <div className="flex flex-col gap-2 p-2">
+            <div className="flex gap-1 items-center text-red-500"><FcRating /><span className="font-bold">Rating</span></div>
             <div className="flex flex-col gap-4">
                 {[1, 2, 3, 4, 5].map((num) => (
                     <div className="flex items-center gap-2" key={num}>
@@ -68,7 +68,7 @@ const Filter = (props: Props) => {
                 ))}
             </div>
         </div>
-        <div className="flex flex-col gap-2 p-2 rounded-md">
+        <div className="flex flex-col gap-2 p-2">
             <div className="flex gap-1 items-center text-red-500"><FaSort /><span className="font-bold">Sort by</span></div>
             <div className="flex flex-col gap-2">
                 {sortCategories?.map((value, key) => (
@@ -78,6 +78,9 @@ const Filter = (props: Props) => {
                     </div>
                 ))}
             </div>
+        </div>
+        <div className="flex flex-col gap-2 p-2">
+            <button onClick={() => props.setCollapse(false) } className="bg-black text-white py-2 font-bold rounded-3xl shadow-lg">Close</button>
         </div>
     </div>)
 }
