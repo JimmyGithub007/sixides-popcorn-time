@@ -4,6 +4,8 @@ import Header from "./Header";
 import Listing from "./Listing";
 import Pagination from "./Pagination";
 import Rating from "./Rating";
+import Modal from "./Modal";
+import Loading from "./Loading";
 
 export {
     Filter,
@@ -12,4 +14,6 @@ export {
     Listing,
     Pagination,
     Rating,
+    Modal,
+    Loading,
 }

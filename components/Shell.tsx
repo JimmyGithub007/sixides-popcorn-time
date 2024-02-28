@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { Filter, Footer, Header } from ".";
+import { Filter, Footer, Header, Modal } from ".";
 
 const Shell = ({ children }: { children: ReactNode }) => {
     const [ collapse, setCollapse ] = useState<boolean>(true);
@@ -16,14 +16,15 @@ const Shell = ({ children }: { children: ReactNode }) => {
         };
     }, []);
 
-    return (<div className="flex p-2 gap-3">
+    return (<><div className="flex p-2 gap-3">
         <Filter collapse={collapse} setCollapse={setCollapse} />
         <div className={`duration-300 w-full ${collapse ? "ml-[250px]" : ""}`}>
             <Header collapse={collapse} setCollapse={setCollapse} />
             {children}
             <Footer />
         </div>
-    </div>);
+    </div>
+    <Modal /></>);
 }
 
 export default Shell;

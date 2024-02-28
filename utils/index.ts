@@ -9,6 +9,17 @@ const options = {
     },
 }
 
+const getMovieCasts = async (id: number) => {
+    try {
+        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}movie/${id}/credits`, options)
+        const result = await resp.json();
+        return result.cast;
+    } catch (error) {
+        console.error('Error fetching movie casts:', error);
+        throw error;
+    }
+}
+
 const getMovies = async (page: number, genreIds: number[], starNum: number, sortId: string) => {
     try {
         console.log(starNum)
@@ -33,5 +44,6 @@ const getGenres = async () => {
 
 export {
     getMovies,
-    getGenres
+    getMovieCasts,
+    getGenres,
 }

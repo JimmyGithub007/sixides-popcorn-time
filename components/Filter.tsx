@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "@/store";
 import { getGenres } from "@/utils";
-import { changeGenreId, changeSort, changeStars } from "@/store/slice/placeSlice";
+import { changeGenreId, changeSort, changeStars } from "@/store/slice/filterSlice";
 import Rating from "./Rating";
 
 interface Genres {
@@ -34,7 +34,7 @@ const sortCategories: {
 ]
 
 const Filter = (props: Props) => {
-    const { genreIds, starNum, sortId } = useSelector((state: RootState) => state.places);
+    const { genreIds, starNum, sortId } = useSelector((state: RootState) => state.filter);
     const dispatch = useDispatch();
     const [ genres, setGenres ] = useState<Genres[]>();
 

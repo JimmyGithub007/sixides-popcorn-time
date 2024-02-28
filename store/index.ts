@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import placesReducer from "./slice/placeSlice";
+import filterReducer from "./slice/filterSlice";
+import movieReducer from "./slice/movieSlice";
 
 const store = configureStore({
     reducer: {
-        places: placesReducer
+        filter: filterReducer,
+        movie: movieReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

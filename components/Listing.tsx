@@ -1,28 +1,22 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "@/store";
 import { getMovies } from "@/utils";
-import Pagination from "./Pagination";
-import Rating from "./Rating";
-
-interface Movie {
-    id: number,
-    original_title: string,
-    poster_path: string,
-    release_date: string,
-    vote_average: number
-}
+import { movieStatesProps, setMovie } from "@/store/slice/movieSlice";
+import { Loading, Pagination, Rating } from ".";
 
 type Props = {
     page: number
 }
 
 const Listing = (params: Props) => {
-    const { genreIds, starNum, sortId } = useSelector((state: RootState) => state.places);
+    const dispatch = useDispatch();
+
+    const { genreIds, starNum, sortId } = useSelector((state: RootState) => state.filter);
     const [ loading, setLoading ] = useState<boolean>(true);
-    const [ movies, setMovies ] = useState<Movie[]>();
+    const [ movies, setMovies ] = useState<movieStatesProps[]>();
     const [ totalPages, setTotalPages ] = useState<number>(0);
 
     useEffect(() => {
@@ -39,11 +33,11 @@ const Listing = (params: Props) => {
 
     return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-272px)] justify-center">
         {   !loading && movies ?
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {
-                    movies?.map((value: Movie, key:number) => 
+                    movies?.map((value: movieStatesProps, key:number) => 
                         <div key={value.id} className={`w-[220px] animate-opacity`}>
-                            <img className="cursor-pointer rounded-lg shadow-lg hover:scale-105 duration-300" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
+                            <img onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg hover:scale-105 duration-300" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
                             <div className="flex flex-col gap-[1px] pt-2">
                                 <Rating starNum={Math.round(value.vote_average/2)} />
                                 <b>{value.original_title}</b>
@@ -53,14 +47,7 @@ const Listing = (params: Props) => {
                     )
                 }
             </div> :
-            <div className="flex gap-4 items-center">
-                <div className="relative inline-flex">
-                    <div className="w-8 h-8 bg-yellow-400 rounded-full"></div>
-                    <div className="w-8 h-8 bg-yellow-400 rounded-full absolute top-0 left-0 animate-ping"></div>
-                    <div className="w-8 h-8 bg-yellow-400 rounded-full absolute top-0 left-0 animate-pulse"></div>
-                </div>
-                <h1 className="text-yellow-400 text-3xl"><b>LOADING</b></h1>
-            </div>
+            <Loading />
         }
         {  !loading && movies && <Pagination current_page={params.page} total_pages={totalPages} /> }
     </div>)

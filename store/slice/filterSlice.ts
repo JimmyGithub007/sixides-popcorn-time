@@ -12,8 +12,8 @@ const initialState: filterStatesProps = {
     sortId: 'popularity.desc',
 };
 
-export const placesSlice = createSlice({
-    name: "places",
+export const filterSlice = createSlice({
+    name: "filter",
     initialState,
     reducers: {
         changeGenreId: (state, action: PayloadAction<number>) => {
@@ -29,5 +29,5 @@ export const placesSlice = createSlice({
     },
 });
 
-export const { changeGenreId, changeStars, changeSort } = placesSlice.actions;
-export default placesSlice.reducer;
+export const { changeGenreId, changeStars, changeSort } = filterSlice.actions;
+export default filterSlice.reducer;
