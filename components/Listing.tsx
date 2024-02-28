@@ -31,7 +31,7 @@ const Listing = (params: Props) => {
         getMoviesAPI();
     }, [params.page, genreIds, starNum, sortId])
 
-    return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-272px)] justify-center">
+    return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-192px)] sm:min-h-[calc(100vh-272px)] justify-center">
         {   !loading && movies ?
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 {

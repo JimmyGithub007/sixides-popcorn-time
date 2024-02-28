@@ -43,21 +43,21 @@ const Modal = () => {
         <div className={`bg-black duration-300 text-white absolute rounded-lg shadow-lg shadow-slate-950 left-[5%] w-[calc(100vw-10%)] md:left-[25%] md:w-[calc(100vw-50%)] min-h-[calc(100vh-30px)] z-20 top-[15px]`} id="modal">
             {   loading ? <div className={`flex items-center justify-center min-h-[calc(100vh-60px)]`}><Loading /></div> :
                 <div className="flex flex-col relative animate-opacity">
-                    <button onClick={() => dispatch(setMovie(initialState)) } className="absolute right-2 top-2 bg-yellow-400 hover:bg-black hover:text-yellow-300 duration-200 w-fit text-black text-5xl rounded-full shadow-lg"><IoIosClose /></button>
+                    <button onClick={() => dispatch(setMovie(initialState)) } className="absolute right-2 top-2 bg-yellow-400 hover:bg-black hover:text-yellow-300 duration-200 w-fit text-black text-4xl sm:text-5xl rounded-full shadow-lg"><IoIosClose /></button>
                     <img className="rounded-t-md" src={`${process.env.NEXT_PUBLIC_POSTER_API}w533_and_h300_bestv2/${movie.poster_path}`} />
                     <div className="flex flex-col py-2 px-4 gap-4">
-                        <div className="flex justify-between">
+                        <div className="flex justify-between gap-6">
                             <div>
-                                <div className="font-bold text-3xl">{movie.original_title}</div>
-                                <div className="font-bold text-lg">Action | Drama</div>
-                                <div className="font-bold text-2xl">{movie.release_date}</div>
+                                <div className="font-bold text-lg sm:text-3xl">{movie.original_title}</div>
+                                <div className="font-bold text-sm sm:text-lg">Action | Drama</div>
+                                <div className="font-bold text-lg sm:text-2xl">{movie.release_date}</div>
                             </div>
                             <div className="flex flex-col items-end">
                                 <Rating starNum={Math.round(movie.vote_average/2)} />
-                                <div className="font-bold text-6xl">{movie.vote_average.toFixed(2)}</div>                        
+                                <div className="font-bold text-4xl sm:text-6xl">{movie.vote_average.toFixed(2)}</div>                        
                             </div>
                         </div>
-                        <div className="">{movie.overview}</div>
+                        <div className="text-sm sm:text-md">{movie.overview}</div>
                         <div className="flex gap-4">
                             <span className="text-2xl font-bold pt-2">Casts</span>
                             <div className="flex gap-3 overflow-x-auto">

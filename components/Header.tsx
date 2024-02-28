@@ -26,7 +26,7 @@ const Header = (props: Props) => {
     return (<header className={`${scrollY > 0 ? "bg-white pl-6" : "bg-black shadow-2xl pl-12 text-yellow-300"} h-16 flex flex-row items-center rounded-md font-bold gap-2 sticky top-0 z-20 duration-300`}>
         <BsArrowLeftCircleFill className={`${scrollY > 0 ? "text-black" : "text-white"} cursor-pointer duration-300 text-3xl ${!props.collapse && "rotate-180"}`} onClick={() => props.setCollapse(!props.collapse) } />
         <PiPopcornDuotone className={`${scrollY > 0 ? "-rotate-12" : "rotate-12"} transform text-4xl duration-[400ms]`} />
-        <span className="text-lg">SIXiDES POPCORN TIME</span>
+        <span className="text-sm md:text-lg">SIXiDES POPCORN TIME</span>
     </header>)
 }
 
