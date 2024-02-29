@@ -21,7 +21,7 @@ const Shell = ({ children }: { children: ReactNode }) => {
         else { document.body.classList.remove("overflow-y-hidden"); }
     }, [collapse])
 
-    return (<><div className="flex p-2 gap-3">
+    return (<><div className="flex gap-3">
         <Filter collapse={collapse} setCollapse={setCollapse} />
         <div className={`duration-300 w-full ${collapse ? "ml-[calc(100vw-0.5rem)] md:ml-[250px]" : ""}`}>
             <Header collapse={collapse} setCollapse={setCollapse} />

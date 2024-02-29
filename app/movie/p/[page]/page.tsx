@@ -1,9 +1,8 @@
-'use client';
-
-import { Header, Filter, Listing, Footer, Modal } from "@/components";
+import { Listing } from "@/components";
+import Shell from "@/components/Shell";
 
 const MoviePage = ({ params }: { params: { page: number } }) => {
-    return (<Listing page={params.page} />)
+    return (<Shell><Listing page={params.page} /></Shell>)
 }
 
 export default MoviePage;

@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 
-const Home = () => {
+const Movie = () => {
   redirect('/movie/p/1');
 
   return (<></>);
 }
 
-export default Home;
+export default Movie;

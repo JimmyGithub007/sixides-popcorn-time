@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface movieStatesProps {
     id: number,
+    title: string,
     original_title: string,
     poster_path: string,
     release_date: string,
@@ -11,6 +12,7 @@ export interface movieStatesProps {
 
 export const initialState: movieStatesProps = {
     id: 0,
+    title: "",
     original_title: "",
     poster_path: "",
     release_date: "",
