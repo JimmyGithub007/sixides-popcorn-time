@@ -19,7 +19,7 @@ const Pagination = (props: Props) => {
         return memoPages;
     }, [props.current_page, props.total_pages])
 
-    return (<div className="flex flex-col sm:flex-row gap-2 p-4">
+    return (<div className="animate-opacity flex flex-col sm:flex-row gap-2 p-4">
         { props.current_page > 1 && <Link href={`/movie/p/${props.current_page-1}`}><button className="border-black border-2 bg-white text-black shadow-lg w-40 h-8 rounded-sm font-bold hover:bg-black hover:text-white transition-colors duration-200">PREVIOUS PAGE</button></Link> }
         <div className="flex gap-2"> 
             {
