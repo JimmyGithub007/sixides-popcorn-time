@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# sixides-popcorn-time
 
-## Getting Started
+A web page that displays a list of movies that are now playing in theaters which data getting from TMDB.
 
-First, run the development server:
+### Done on requirement(s)
+1. Using typescript & NextJS v14 with App Router
+2. Using TailwindCss
+3. Getting data from TMDB
+4. Deploy to a publicly accessible URL
+5. Listing out the data with pagination which showing 30 movies per page, most popular first
+6. Able to filter genres & ratings
+7. Able to sort the list by movie title, release date, popularity or ratings
+8. Clicking on a movie should display a modal window with more information about the
+movie, including a synopsis, release date, and cast.
+9. Responsive on any platform
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 💻 Live [Demo](https://sixides-popcorn-time.netlify.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Screen Shot(s)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/7794457a-e59a-414c-ac9e-e353d00cc39e)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/d061a68a-0db7-4f0b-a584-f68028a770a5)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/56baae61-c853-451b-b521-5817f94d1277)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation and Setup Instructions
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+#### Example:  
 
-## Learn More
+Clone down this repository. You will need `node` and `npm` installed globally on your machine.  
 
-To learn more about Next.js, take a look at the following resources:
+Change ENV
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Change the .env.example to .env and adding your own API KEY which get from TMDB into `NEXT_PUBLIC_API_KEY`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Installation:
 
-## Deploy on Vercel
+`npm install`  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To Start Server:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`npm run dev`
+
+To Visit App:
+
+`localhost:3000`
