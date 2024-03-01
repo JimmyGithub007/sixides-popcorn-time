@@ -8,6 +8,7 @@ export interface movieStatesProps {
     release_date: string,
     vote_average: number,
     overview: string,
+    genre_ids: number[]
 }
 
 export const initialState: movieStatesProps = {
@@ -18,6 +19,7 @@ export const initialState: movieStatesProps = {
     release_date: "",
     vote_average: 0,
     overview: "",
+    genre_ids: []
 };
 
 export const movieSlice = createSlice({
@@ -26,11 +28,13 @@ export const movieSlice = createSlice({
     reducers: {
         setMovie: (state, action: PayloadAction<movieStatesProps>) => {
             state.id = action.payload.id;
+            state.title = action.payload.title;
             state.original_title = action.payload.original_title;
             state.poster_path = action.payload.poster_path;
             state.release_date = action.payload.release_date;
             state.vote_average = action.payload.vote_average;
             state.overview = action.payload.overview;
+            state.genre_ids = action.payload.genre_ids;
         },
     },
 });

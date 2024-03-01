@@ -9,12 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "@/store";
 import { getGenres } from "@/utils";
 import { changeGenreId, changeSort, changeStars } from "@/store/slice/filterSlice";
+import { genresStatesProps, setGenres } from "@/store/slice/genresSlice";
 import Rating from "./Rating";
-
-interface Genres {
-    id: number,
-    name: string,
-}
 
 type Props = {
     collapse?: boolean,
@@ -36,13 +32,13 @@ const sortCategories: {
 
 const Filter = (props: Props) => {
     const { genreIds, starNum, sortId } = useSelector((state: RootState) => state.filter);
+    const { genres } = useSelector((state: RootState) => state.genres);
     const dispatch = useDispatch();
-    const [ genres, setGenres ] = useState<Genres[]>();
 
     useEffect(() => {
         const getGenresAPI = async () => {
             const resp = await getGenres();
-            setGenres(resp.genres);
+            dispatch(setGenres(resp.genres));
         } 
         getGenresAPI();
     }, [])
@@ -52,7 +48,7 @@ const Filter = (props: Props) => {
             <div className="flex gap-1 items-center text-red-500"><BiSolidCategoryAlt /><span className="font-bold">Genres</span></div>
             <div className="flex flex-wrap gap-2">
                 {
-                    genres?.map((value: Genres) => 
+                    genres?.map((value: genresStatesProps) => 
                         <button onClick={() => dispatch(changeGenreId(value.id))} className={`${genreIds.includes(value.id) ? "bg-yellow-300 text-black" : "bg-black text-white"} px-2 py-1 text-xs rounded-sm shadow-md font-bold duration-200`} key={value.id}>{value.name}</button>
                     )
                 }

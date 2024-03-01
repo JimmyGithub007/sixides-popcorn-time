@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IoIosClose } from "react-icons/io";
 import { Loading, Rating } from ".";
-import { getMovieCasts } from "@/utils";
+import { getMovieCasts, getMovieImages } from "@/utils";
 import { initialState, movieStatesProps, setMovie } from "@/store/slice/movieSlice";
 import { RootState } from "@/store";
 import Image from "next/image";
@@ -18,25 +18,39 @@ interface Cast {
     gender: number,
 }
 
+interface Image {
+    file_path: string,
+    height: number,
+    width: number,
+}
+
 const Modal = () => {
     const dispatch = useDispatch();
     const movie: movieStatesProps = useSelector((state: RootState) => state.movie);
+    const { genres } = useSelector((state: RootState) => state.genres);
     const [loading, setLoading] = useState<boolean>(true);
     const [casts, setCasts] = useState<Cast[]>();
+    const [images, setImages] = useState<Image[]>();
 
     useEffect(() => {
         setLoading(true);
         document.body.classList.remove("overflow-y-hidden");
         if(movie.id > 0) {
+            setLoading(false);
             document.body.classList.add("overflow-y-hidden");
             const getMovieCastsAPI = async () => {
                 await new Promise(resolve => setTimeout(resolve, 500));
                 const resp = await getMovieCasts(movie.id);
-                console.log(resp)
                 setCasts(resp);
-                setLoading(false);
             }
             getMovieCastsAPI();
+
+            const getMovieImagesAPI = async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                const resp = await getMovieImages(movie.id);
+                setImages([ ...resp.backdrops, resp.posters ]);
+            }
+            getMovieImagesAPI();
         }
     }, [movie.id])
 
@@ -44,14 +58,18 @@ const Modal = () => {
         <div className={`bg-black duration-300 text-white absolute rounded-lg shadow-lg shadow-slate-950 left-[5%] w-[calc(100vw-10%)] md:left-[calc(50%-266.5px)] md:w-[533px] min-h-[calc(100vh-30px)] z-20 top-[15px]`} id="modal">
             {   loading ? <div className={`flex items-center justify-center min-h-[calc(100vh-60px)]`}><Loading /></div> :
                 <div className="flex flex-col relative animate-opacity">
-                    <button onClick={() => dispatch(setMovie(initialState)) } className="absolute right-2 top-2 bg-yellow-400 hover:bg-black hover:text-yellow-300 duration-200 w-fit text-black text-4xl sm:text-5xl rounded-full shadow-lg"><IoIosClose /></button>
+                    <button onClick={() => { dispatch(setMovie(initialState)); setCasts([]); setImages([]) }} className="absolute right-2 top-2 bg-yellow-400 hover:bg-black hover:text-yellow-300 duration-200 w-fit text-black text-4xl sm:text-5xl rounded-full shadow-lg"><IoIosClose /></button>
                     <Image onLoadingComplete={(image) => image.classList.remove("opacity-0") } alt="" width={533} height={300} className="rounded-t-md opacity-0 duraction-300" src={`${process.env.NEXT_PUBLIC_POSTER_API}w533_and_h300_bestv2/${movie.poster_path}`} />
                     <div className="flex flex-col py-2 px-4 gap-4">
                         <div className="flex justify-between gap-6">
                             <div>
+                                <div className="font-bold text-black text-sm sm:text-md flex flex-wrap gap-2">{
+                                    movie.genre_ids.map((value) => 
+                                        <div key={value} className="bg-white shadow-xl shadow-gray-700 px-3 rounded-sm">{genres.find(e => e.id == value)?.name}</div>
+                                    )
+                                }</div>
                                 <div className="font-bold text-lg sm:text-3xl">{movie.title}</div>
-                                <div className="font-bold text-sm sm:text-lg">Action | Drama</div>
-                                <div className="font-bold text-lg sm:text-2xl">{movie.release_date}</div>
+                                <div className="font-bold text-lg sm:text-xl text-slate-400">{movie.release_date}</div>
                             </div>
                             <div className="flex flex-col items-end">
                                 <Rating starNum={Math.round(movie.vote_average/2)} />
@@ -72,6 +90,16 @@ const Modal = () => {
                                             <div className="text-slate-400 w-[100px]">{value.character}</div>
                                             <div className="font-bold w-[100px]">{value.name}</div>
                                         </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        <div className="flex gap-4">
+                            <span className="text-2xl font-bold pt-2">Media</span>
+                            <div className="flex gap-3 overflow-x-auto">
+                                {
+                                    images?.map((value, key) => (
+                                        <Image key={key} alt="" width={1066} height={600} className="rounded-md shadow-lg shadow-slate-800" src={`${process.env.NEXT_PUBLIC_POSTER_API}w1066_and_h600_face/${value.file_path}`} />
                                     ))
                                 }
                             </div>

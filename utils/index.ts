@@ -40,8 +40,19 @@ const getGenres = async () => {
     }
 }
 
+const getMovieImages = async (id: number) => {
+    try {
+        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}movie/${id}/images`, options)
+        return await resp.json();
+    } catch (error) {
+        console.error('Error fetching images:', error);
+        throw error;
+    }
+}
+
 export {
     getMovies,
     getMovieCasts,
     getGenres,
+    getMovieImages,
 }

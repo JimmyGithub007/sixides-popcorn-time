@@ -18,6 +18,7 @@ const Listing = (params: Props) => {
     const dispatch = useDispatch();
 
     const { genreIds, starNum, sortId } = useSelector((state: RootState) => state.filter);
+    const { genres } = useSelector((state: RootState) => state.genres);
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ movies, setMovies ] = useState<movieStatesProps[]>();
     const [ totalPages, setTotalPages ] = useState<number>(0);
@@ -45,8 +46,13 @@ const Listing = (params: Props) => {
                     {   
                         movies?.map((value: movieStatesProps, key:number) => 
                             <div key={value.id} className={`w-[220px] animate-opacity`}>
-                                <Image alt={value.title} width={220} height={330} onLoadingComplete={(image) => image.classList.remove("opacity-0") } onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg hover:scale-105 duration-300 transition-opacity opacity-0" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
+                                <Image alt={value.title} width={220} height={330} onLoadingComplete={(image) => image.classList.remove("opacity-0") } onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg hover:scale-105 transition duration-300 transition-opacity opacity-0" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
                                 <div className="flex flex-col gap-[1px] pt-2">
+                                    <div className="font-bold text-black text-sm sm:text-md flex flex-wrap gap-1 pb-2">{
+                                        value.genre_ids.map((value2) => 
+                                            <div key={value2} className="bg-black text-white shadow-md px-2 rounded-sm text-[0.6rem]">{genres.find(e => e.id == value2)?.name}</div>
+                                        )
+                                    }</div>
                                     <Rating starNum={Math.round(value.vote_average/2)} />
                                     <b>{value.title}</b>
                                     <span className="text-gray-500 font-medium text-sm">Release Date: {value.release_date}</span>

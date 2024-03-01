@@ -1,11 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import filterReducer from "./slice/filterSlice";
 import movieReducer from "./slice/movieSlice";
+import genresReducer from "./slice/genresSlice";
 
 const store = configureStore({
     reducer: {
         filter: filterReducer,
-        movie: movieReducer
+        movie: movieReducer,
+        genres: genresReducer,
+
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

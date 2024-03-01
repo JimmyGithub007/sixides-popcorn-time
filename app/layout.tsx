@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/store/StoreProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Ubuntu({ subsets: ["latin"], weight: '400' });
 
 export const metadata: Metadata = {
   title: "SIXiDES POPCORN TIME",
