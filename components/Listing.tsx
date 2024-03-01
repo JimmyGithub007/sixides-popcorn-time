@@ -46,7 +46,7 @@ const Listing = (params: Props) => {
                     {   
                         movies?.map((value: movieStatesProps, key:number) => 
                             <div key={value.id} className={`w-[220px] animate-opacity`}>
-                                <Image alt={value.title} width={220} height={330} onLoadingComplete={(image) => image.classList.remove("opacity-0") } onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg hover:scale-105 transition duration-300 transition-opacity opacity-0" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
+                                <Image alt={value.title} width={220} height={330} onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg duration-300 hover:scale-105" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
                                 <div className="flex flex-col gap-[1px] pt-2">
                                     <div className="font-bold text-black text-sm sm:text-md flex flex-wrap gap-1 pb-2">{
                                         value.genre_ids.map((value2) => 
