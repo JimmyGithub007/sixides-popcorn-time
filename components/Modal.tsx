@@ -58,7 +58,7 @@ const Modal = () => {
     return (<div className={`${movie.id > 0 ? "opacity-100 visible" : "opacity-0 invisible"} fixed w-screen h-screen bg-black/30 top-0 z-20 duration-200 overflow-y-auto overflow-x-hidden`}>
         <div className={`pb-[15px] text-white absolute left-[5%] w-[calc(100vw-10%)] md:left-[calc(50%-266.5px)] md:w-[533px] z-20 top-[15px]`} id="modal">
             {   loading ? <div className={`flex items-center justify-center min-h-[calc(100vh-60px)]`}><Loading /></div> :
-                <div className="bg-black flex flex-col relative animate-opacity rounded-lg shadow-lg shadow-slate-950">
+                <div className="bg-black flex flex-col relative animate-opacity rounded-lg shadow-lg shadow-slate-950 min-h-screen">
                     <button onClick={() => { dispatch(setMovie(initialState)); setCasts([]); setImages([]) }} className="absolute right-2 top-2 bg-yellow-400 hover:bg-black hover:text-yellow-300 duration-200 w-fit text-black text-4xl sm:text-5xl rounded-full shadow-lg z-[100]"><IoIosClose /></button>
                     <Poster type="poster" width={533} height={300} className="rounded-t-md" poster_path={`${process.env.NEXT_PUBLIC_POSTER_API}w533_and_h300_bestv2/${movie.poster_path}`} />
                     <div className="flex flex-col py-2 px-4 gap-4">
