@@ -1,5 +1,6 @@
 'use client'
 
+import { motion } from "framer-motion"
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { FaGreaterThanEqual, FaSort  } from "react-icons/fa";
@@ -35,17 +36,22 @@ const Filter = () => {
     const [ loading, setLoading ] = useState<boolean>(true);
 
     useEffect(() => {
-        const getGenresAPI = async () => {
+        const delay = 1000; // 1000ms delay
+        const timeoutId = setTimeout(async () => {
             const resp = await getGenres();
             dispatch(setGenres(resp.genres));
             setLoading(false);
-        } 
-        getGenresAPI();
-    }, [])
+        }, delay);
+
+        return () => clearTimeout(timeoutId); // Cleanup function to clear the timeout
+    }, [dispatch]);
 
     return (<div className={`fixed h-full duration-300 w-screen p-2 md:w-[250px] ${collapse ? "left-0 overflow-y-auto" : "-left-full md:-left-[250px]"}`}>
         {   loading ? <Skeleton /> :
-            <div className="animate-opacity">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+            >
                 <div className="flex flex-col gap-2 p-2">
                     <div className="flex gap-1 items-center text-red-500"><BiSolidCategoryAlt /><span className="font-bold">Genres</span></div>
                     <div className="flex flex-wrap gap-2">
@@ -83,7 +89,7 @@ const Filter = () => {
                         <BsArrowLeftCircleFill /> Close
                     </button>
                 </div>
-            </div>
+            </motion.div>
         }
     </div>)
 }

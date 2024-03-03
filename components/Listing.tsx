@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
+import { motion } from "framer-motion"
 import { RootState } from "@/store";
 import { getMovies } from "@/utils";
 import { movieStatesProps, setMovie } from "@/store/slice/movieSlice";
@@ -41,10 +42,28 @@ const Listing = (params: Props) => {
     return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-192px)] sm:min-h-[calc(100vh-272px)] justify-center">
         {   !loading ?
                 movies ?
-                <div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
                     {   
                         movies?.map((value: movieStatesProps, key:number) => 
-                            <div key={key} className={`w-[150px] md:w-[220px] animate-opacity`}>
+                            <motion.div 
+                                initial={{ 
+                                    opacity: 0, 
+                                    y: 50,
+                                }}
+                                whileInView={{
+                                    opacity: 1, 
+                                    y: 0, 
+                                    rotate: -1, 
+                                    transition: {
+                                        type: "spring",
+                                        bounce: 0.4,
+                                        duration: 0.8,
+                                        delay: (key+1)/30
+                                    }
+                                }}
+                                viewport={{ once: true }}
+                                key={key} className={`w-[150px] md:w-[220px]`}
+                            >
                                 <Image alt={value.title} width={220} height={330} onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg duration-300 hover:scale-105" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
                                 <div className="flex flex-col gap-1 pt-2">
                                     <div className="font-bold text-black text-sm sm:text-md flex flex-wrap gap-1 pb-2">{
@@ -61,7 +80,7 @@ const Listing = (params: Props) => {
                                         <span className="font-bold text-lg sm:text-3xl">{value.vote_average.toFixed(2)}</span>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         )
                     }
                 </div> : <PageNotFound page="listing" />
