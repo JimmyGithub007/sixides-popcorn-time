@@ -44,7 +44,7 @@ const Listing = (params: Props) => {
                 <div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                     {   
                         movies?.map((value: movieStatesProps, key:number) => 
-                            <div key={value.id} className={`w-[150px] md:w-[220px] animate-opacity`}>
+                            <div key={key} className={`w-[150px] md:w-[220px] animate-opacity`}>
                                 <Image alt={value.title} width={220} height={330} onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg duration-300 hover:scale-105" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
                                 <div className="flex flex-col gap-1 pt-2">
                                     <div className="font-bold text-black text-sm sm:text-md flex flex-wrap gap-1 pb-2">{
