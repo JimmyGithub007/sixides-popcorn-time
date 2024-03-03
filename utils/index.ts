@@ -74,7 +74,9 @@ const getMovies = async (props: movieAPIProps) => {
 
 const getGenres = async () => {
     try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}genre/movie/list`, options)
+        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}genre/movie/list`, {
+            ...options, cache: "force-cache"//force cache prevent call this api every time
+        })
         return await resp.json();
     } catch (error) {
         console.error('Error fetching genres:', error);
