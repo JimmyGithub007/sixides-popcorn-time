@@ -17,9 +17,19 @@ movie, including a synopsis, release date, and cast.
 ### 💻 Live [Demo](https://sixides-popcorn-time.netlify.app/)
 
 ## Project Screen Shot(s)
-![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/7794457a-e59a-414c-ac9e-e353d00cc39e)
-![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/d061a68a-0db7-4f0b-a584-f68028a770a5)
-![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/56baae61-c853-451b-b521-5817f94d1277)
+
+PC View
+
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/caefb80a-8475-4b9d-8cd7-5feff037083c)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/2faa5680-29cf-4e6d-8e61-ef4d9b598159)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/28bdb245-2905-4b3a-afd3-0e09a37f772b)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/cdaf9bc6-c134-4850-a865-4adeec39ad6e)
+
+Mobile View
+
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/a39c74d8-2485-4166-8f60-563918fcc784)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/28f098e2-1e97-4d28-a6b0-cdb8561ecf72)
+![image](https://github.com/JimmyGithub007/sixides-popcorn-time/assets/47911072/9d66e8e2-de94-4dea-9722-4177aa73c15d)
 
 ## Installation and Setup Instructions
 
