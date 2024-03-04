@@ -42,7 +42,7 @@ const Listing = (params: Props) => {
     return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-192px)] sm:min-h-[calc(100vh-272px)] justify-center">
         {   !loading ?
                 movies ?
-                <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
+                <div className="grid gap-2 md:gap-3 lg:gap-4 grid-cols-2 md:grid-cols-3">
                     {   
                         movies?.map((value: movieStatesProps, key:number) => 
                             <motion.div 
@@ -62,7 +62,7 @@ const Listing = (params: Props) => {
                                     }
                                 }}
                                 viewport={{ once: true }}
-                                key={key} className={`w-[150px] md:w-[220px]`}
+                                key={key} className={`w-[150px] md:w-[160px] lg:w-[220px]`}
                             >
                                 <Image alt={value.title} width={220} height={330} onClick={() => dispatch(setMovie({...value})) } className="cursor-pointer rounded-lg shadow-lg duration-300 hover:scale-105" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
                                 <div className="flex flex-col gap-1 pt-2">

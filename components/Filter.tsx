@@ -46,7 +46,7 @@ const Filter = () => {
         return () => clearTimeout(timeoutId); // Cleanup function to clear the timeout
     }, [dispatch]);
 
-    return (<div className={`fixed h-full duration-300 w-screen p-2 md:w-[250px] ${collapse ? "left-0 overflow-y-auto" : "-left-full md:-left-[250px]"}`}>
+    return (<div className={`z-20 fixed bg-stone-50 h-full duration-300 w-screen p-2 md:w-[250px] shadow-md ${collapse ? "left-0 overflow-y-auto" : "-left-full md:-left-[250px]"}`}>
         {   loading ? <Skeleton /> :
             <motion.div
                 initial={{ opacity: 0 }}

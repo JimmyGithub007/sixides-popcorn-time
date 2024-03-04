@@ -17,9 +17,9 @@ const Shell = ({ children }: { children: ReactNode }) => {
         if(arr[1] === "movie" && arr[2] === "p") setShow(true);
     }, [pathname])
 
-    return show ? (<><div className="flex gap-3 p-2">
+    return show ? (<><div className="flex gap-3">
         <Filter />
-        <div className={`duration-300 w-full ${collapse ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[calc(100vw-0.5rem)] md:ml-[250px]" : "visible"}`}>
+        <div className={`m-2 duration-300 w-full ${collapse ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[calc(100vw-0.5rem)] md:ml-[250px]" : "visible"}`}>
             <Header />
             {children}
             <Footer />
