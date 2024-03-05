@@ -3,6 +3,8 @@ import { movieStatesProps } from "@/store/slice/movieSlice";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const API_URL = process.env.NEXT_PUBLIC_MOVIE_API;
+const totalPerPage = 20;
+const newTotalPerPage = 30;//make sure to get the movies with 30 per page not like orig 20 per page
 
 interface movieAPIProps extends filterStatesProps {
     page: number
@@ -16,32 +18,26 @@ const options = {
     },
 }
 
-const getMovieCasts = async (id: number) => {
+const fetchJSON = async (url: string) => {
     try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}movie/${id}/credits`, options)
-        const result = await resp.json();
-        return result.cast;
+        const resp = await fetch(url, options);
+        return await resp.json();
     } catch (error) {
-        console.error('Error fetching movie casts:', error);
+        console.error(`Error fetching data from ${url}:`, error);
         throw error;
     }
 }
 
-const getMoviesPerPage = async (props: movieAPIProps) => {
-    const { page, genreIds, starNum, sortId } = props;
-    try {
-        const resp = await fetch(`${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${starNum*2}.0&sort_by=${sortId}`, options)
-        const data = await resp.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching movies:', error);
-        throw error;
-    }
-} 
+const getMovieCasts = async (id: number) => {
+    return (await fetchJSON(`${API_URL}movie/${id}/credits`)).cast;
+}
+
+const getMoviesPerPage = async ({ page, genreIds, starNum, sortId }: movieAPIProps) => {
+    const url = `${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${starNum*2}.0&sort_by=${sortId}`;
+    return await fetchJSON(url);
+}
 
 const getMovies = async (props: movieAPIProps) => {
-    const totalPerPage = 20;
-    const newTotalPerPage = 30;//make sure to get the movies with 30 per page not like orig 20 per page
     const { page } = props;
     const resp = await getMoviesPerPage({...props, page: 1});
     let newPage: number = page*(resp.total_pages/(resp.total_pages*totalPerPage/newTotalPerPage));//cal return the new page number if want 30 per page
@@ -73,25 +69,11 @@ const getMovies = async (props: movieAPIProps) => {
 }
 
 const getGenres = async () => {
-    try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}genre/movie/list`, {
-            ...options, cache: "force-cache"//force cache prevent call this api every time
-        })
-        return await resp.json();
-    } catch (error) {
-        console.error('Error fetching genres:', error);
-        throw error;
-    }
+    return await fetchJSON(`${API_URL}genre/movie/list`);
 }
 
 const getMovieImages = async (id: number) => {
-    try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_MOVIE_API}movie/${id}/images`, options)
-        return await resp.json();
-    } catch (error) {
-        console.error('Error fetching images:', error);
-        throw error;
-    }
+    return await fetchJSON(`${API_URL}movie/${id}/images`);
 }
 
 export {
