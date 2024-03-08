@@ -32,8 +32,8 @@ const getMovieCasts = async (id: number) => {
     return (await fetchJSON(`${API_URL}movie/${id}/credits`)).cast;
 }
 
-const getMoviesPerPage = async ({ page, genreIds, starNum, sortId }: movieAPIProps) => {
-    const url = `${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${starNum*2}.0&sort_by=${sortId}`;
+const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }: movieAPIProps) => {
+    const url = `${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${startScore}&vote_average.lte=${endScore}&sort_by=${sortId}`;
     return await fetchJSON(url);
 }
 
