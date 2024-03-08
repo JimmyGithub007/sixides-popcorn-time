@@ -19,7 +19,7 @@ const Shell = ({ children }: { children: ReactNode }) => {
 
     return show ? (<><div className="flex gap-3">
         <Filter />
-        <div className={`m-2 duration-300 w-full ${collapse ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[calc(100vw-0.5rem)] md:ml-[250px]" : "visible"}`}>
+        <div className={`duration-300 w-full ${collapse ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[calc(100vw-0.5rem)] md:ml-[250px]" : "visible"}`}>
             <Header />
             {children}
             <Footer />

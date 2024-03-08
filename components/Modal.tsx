@@ -85,7 +85,7 @@ const Modal = () => {
                                 </div>
                                 <div className="flex flex-col sm:items-end">
                                     <Rating starNum={Math.round(movie.vote_average/2)} />
-                                    <div className="font-bold text-4xl sm:text-6xl">{movie.vote_average.toFixed(2)}</div>                        
+                                    <div className="font-bold text-4xl sm:text-6xl">{movie.vote_average.toFixed(1)}</div>                        
                                 </div>
                             </div>
                             <div className="text-sm sm:text-md">{movie.overview}</div>

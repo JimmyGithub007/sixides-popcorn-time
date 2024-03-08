@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from "framer-motion"
 import { RootState } from "@/store";
-import { getMovies } from "@/utils";
 import { movieStatesProps, setMovie } from "@/store/slice/movieSlice";
+import { setLoading, setSearch } from "@/store/slice/filterSlice";
+import { getMovies } from "@/utils";
 import { Loading, Pagination, Rating } from ".";
 import Image from "next/image";
 import PageNotFound from "@/app/not-found";
@@ -19,25 +20,31 @@ const Listing = (params: Props) => {
 
     const filterProps = useSelector((state: RootState) => state.filter);
     const { genres } = useSelector((state: RootState) => state.genres);
-    const [ loading, setLoading ] = useState<boolean>(true);
     const [ movies, setMovies ] = useState<movieStatesProps[]>();
     const [ totalPages, setTotalPages ] = useState<number>(0);
 
     useEffect(() => {
-        setLoading(true);
-        const getMoviesAPI = async () => {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            const resp = await getMovies({ ...filterProps, page: params.page });
-            if(resp?.success == false) {
-                setMovies([]);
-                setLoading(false);
-            }
-            setMovies(resp.results);
-            setTotalPages(resp.total_pages);
-            setLoading(false);
-        } 
-        getMoviesAPI();
-    }, [filterProps, params.page])
+        if(filterProps.isSearch) {
+            dispatch(setLoading(true));
+            const getMoviesAPI = async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                const resp = await getMovies({ ...filterProps, page: params.page });
+                if(resp?.success == false) {
+                    setMovies([]);
+                    dispatch(setLoading(false));
+                }
+                setMovies(resp.results);
+                setTotalPages(resp.total_pages);
+                dispatch(setLoading(false));
+                dispatch(setSearch(false));
+            } 
+            getMoviesAPI();
+        }
+    }, [filterProps.isSearch, params.page])
+
+    useEffect(() => {
+        dispatch(setSearch(true));
+    }, [])
 
     const MovieDiv = (value: movieStatesProps, key: number) => {
         return <motion.div
@@ -48,7 +55,7 @@ const Listing = (params: Props) => {
             whileInView={{
                 opacity: 1,
                 y: 0,
-                rotate: -0.5,
+                rotate: -1,
                 transition: {
                     type: "spring",
                     bounce: 0.4,
@@ -72,7 +79,7 @@ const Listing = (params: Props) => {
                         <b className="text-sm sm:text-md">{value.title}</b>
                         <span className="font-medium text-gray-500 text-xs md:text-sm">{value.release_date}</span>
                     </div>
-                    <span className="font-bold text-lg md:text-2xl lg:text-3xl">{value.vote_average.toFixed(2)}</span>
+                    <span className="font-bold text-lg md:text-2xl lg:text-3xl">{value.vote_average.toFixed(1)}</span>
                 </div>
             </div>
         </motion.div>
@@ -92,8 +99,8 @@ const Listing = (params: Props) => {
         ))
     }
 
-    return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-192px)] sm:min-h-[calc(100vh-272px)] justify-center">
-        {   !loading ?
+    return (<div className="flex flex-col items-center w-full py-8 min-h-[calc(100vh-174px)] sm:min-h-[calc(100vh-256px)] justify-center">
+        {   !filterProps.loading ?
                 movies ?
                 <div className="grid gap-2 md:gap-3 lg:gap-4 xl:gap-2 grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
                     {   gridDiv(2, 15, "flex md:hidden", movies)    }
@@ -102,7 +109,7 @@ const Listing = (params: Props) => {
                 </div> : <PageNotFound page="listing" />
             : <Loading />
         }
-        {  !loading && movies && <Pagination current_page={params.page} total_pages={totalPages} /> }
+        {  !filterProps.loading && movies && <Pagination current_page={params.page} total_pages={totalPages} /> }
     </div>)
 }
 
