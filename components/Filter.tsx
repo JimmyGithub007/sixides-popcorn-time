@@ -80,8 +80,8 @@ const Filter = () => {
                     </div>
                 </div>
                 <div className="p-2">
-                    <button onClick={() => { (!loading && !isSearch) && dispatch(setSearch(true)) }} className={`${loading ? "cursor-not-allowed bg-gray-300" : "bg-black hover:opacity-80"} w-full flex gap-2 items-center justify-center text-white py-2 font-bold rounded-sm shadow-lg duration-300`}>
-                        { loading && <span className="animate-ping h-4 w-4 rounded-full bg-yellow-400 pr-2"></span> }Search
+                    <button onClick={() => { (!loading && !isSearch) && dispatch(setSearch(true)) }} className={`${loading ? "cursor-not-allowed bg-gray-300" : "bg-black hover:opacity-80"} relative w-full flex gap-2 items-center justify-center text-white py-2 font-bold rounded-sm shadow-lg duration-300`}>
+                        { loading && <span className="absolute right-4 top-3 animate-ping h-4 w-4 rounded-full bg-yellow-400 pr-2"></span> }Search
                     </button>
                 </div>
                 <div className="p-2 visible md:invisible">

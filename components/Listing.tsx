@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { RootState } from "@/store";
 import { movieStatesProps, setMovie } from "@/store/slice/movieSlice";
 import { setLoading, setSearch } from "@/store/slice/filterSlice";
+import { setCollapse } from "@/store/slice/windowSlice";
 import { getMovies } from "@/utils";
 import { Loading, Pagination, Rating } from ".";
 import Image from "next/image";
@@ -37,6 +38,7 @@ const Listing = (params: Props) => {
                 setTotalPages(resp.total_pages);
                 dispatch(setLoading(false));
                 dispatch(setSearch(false));
+                if(window.innerWidth < 768) dispatch(setCollapse(false));
             } 
             getMoviesAPI();
         }
