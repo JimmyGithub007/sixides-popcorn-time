@@ -5,8 +5,10 @@ export interface filterStatesProps {
     startScore: number,
     endScore: number,
     sortId: string,
+    openSearchBar: boolean,
     isSearch: boolean,
-    loading: boolean,
+    isFilter: boolean,
+    keyword: string | null,
 }
 
 const initialState: filterStatesProps = {
@@ -14,8 +16,10 @@ const initialState: filterStatesProps = {
     startScore: 0,
     endScore: 10,
     sortId: "popularity.desc",
+    openSearchBar: false,
     isSearch: false,
-    loading: true,
+    isFilter: false,
+    keyword: "",
 };
 
 if (typeof window !== 'undefined' && window.localStorage) {
@@ -49,18 +53,24 @@ export const filterSlice = createSlice({
         changeSort: (state, action: PayloadAction<string>) => {
             state.sortId = action.payload;
         },
-        setLoading: (state, action: PayloadAction<boolean>) => {
-            state.loading = action.payload;
-        },
-        setSearch: (state, action: PayloadAction<boolean>) => {
-            state.isSearch = action.payload;
+        setFilter: (state, action: PayloadAction<boolean>) => {
+            state.isFilter = action.payload;
             localStorage.setItem('genreIds', JSON.stringify(state.genreIds));
             localStorage.setItem('startScore', JSON.stringify(state.startScore));
             localStorage.setItem('endScore', JSON.stringify(state.endScore));
             localStorage.setItem('sortId', JSON.stringify(state.sortId));
         },
+        setOpenSearchBar: (state, action: PayloadAction<boolean>) => {
+            state.openSearchBar = action.payload;
+        },
+        setSearch: (state, action: PayloadAction<boolean>) => {
+            state.isSearch = action.payload;
+        },
+        setKeyword: (state, action: PayloadAction<string>) => {
+            state.keyword = action.payload;
+        },
     },
 });
 
-export const { changeGenreId, changeStartScore, changeEndScore, changeSort, setSearch, setLoading } = filterSlice.actions;
+export const { changeGenreId, changeStartScore, changeEndScore, changeSort, setFilter, setOpenSearchBar, setSearch, setKeyword } = filterSlice.actions;
 export default filterSlice.reducer;

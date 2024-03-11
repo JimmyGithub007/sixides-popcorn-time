@@ -62,7 +62,7 @@ const Modal = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }} 
-            className={`fixed w-screen h-screen bg-black/30 top-0 z-20 duration-200 overflow-y-auto overflow-x-hidden`}>
+            className={`bg-black/30 duration-200 fixed h-screen overflow-x-hidden overflow-y-auto top-0 w-screen z-20`}>
             <motion.div
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}

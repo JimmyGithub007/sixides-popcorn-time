@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "@/store";
 import { getGenres } from "@/utils";
-import { changeGenreId, changeSort, setSearch } from "@/store/slice/filterSlice";
+import { changeGenreId, changeSort, setFilter } from "@/store/slice/filterSlice";
 import { genresStatesProps, setGenres } from "@/store/slice/genresSlice";
 import { setCollapse } from "@/store/slice/windowSlice";
 import Skeleton from "./Skeleton";
@@ -30,7 +30,8 @@ const sortCategories: {
 
 const Filter = () => {
     const dispatch = useDispatch();
-    const { genreIds, sortId, loading, isSearch } = useSelector((state: RootState) => state.filter);
+    const { genreIds, sortId, isSearch } = useSelector((state: RootState) => state.filter);
+    const { loading } = useSelector((state: RootState) => state.movies);
     const { collapse } = useSelector((state: RootState) => state.window);
     const { genres } = useSelector((state: RootState) => state.genres);
     const [ loadingGenres, setLoadingGenres ] = useState<boolean>(true);
@@ -46,7 +47,7 @@ const Filter = () => {
         return () => clearTimeout(timeoutId); // Cleanup function to clear the timeout
     }, [dispatch]);
 
-    return (<div className={`z-20 fixed bg-stone-50 h-full duration-300 w-screen p-2 md:w-[250px] shadow-md overflow-x-hidden ${collapse ? "left-0 overflow-y-auto" : "-left-full md:-left-[250px]"}`}>
+    return (<div className={`z-20 fixed bg-stone-50 h-full duration-300 w-screen p-2 md:w-[250px] overflow-x-hidden ${collapse ? "left-0 overflow-y-auto" : "-left-full md:-left-[250px]"}`}>
         {   loadingGenres ? <Skeleton /> :
             <motion.div
                 initial={{ opacity: 0 }}
@@ -80,7 +81,7 @@ const Filter = () => {
                     </div>
                 </div>
                 <div className="p-2">
-                    <button onClick={() => { (!loading && !isSearch) && dispatch(setSearch(true)) }} className={`${loading ? "cursor-not-allowed bg-gray-300" : "bg-black hover:opacity-80"} relative w-full flex gap-2 items-center justify-center text-white py-2 font-bold rounded-sm shadow-lg duration-300`}>
+                    <button onClick={() => { (!loading && !isSearch) && dispatch(setFilter(true)) }} className={`${loading ? "cursor-not-allowed bg-gray-300" : "bg-black hover:opacity-80"} relative w-full flex gap-2 items-center justify-center text-white py-2 font-bold rounded-sm shadow-lg duration-300`}>
                         { loading && <span className="absolute right-4 top-3 animate-ping h-4 w-4 rounded-full bg-yellow-400 pr-2"></span> }Search
                     </button>
                 </div>

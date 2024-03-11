@@ -2,13 +2,15 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { Filter, Footer, Header, Modal } from ".";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { IoIosArrowUp } from "react-icons/io";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 
 const Shell = ({ children }: { children: ReactNode }) => {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const keyword = searchParams.get("keyword");
     const { scrollY, collapse } = useSelector((state: RootState) => state.window);
     const [ show, setShow ] = useState<boolean>(false);
 
@@ -17,9 +19,9 @@ const Shell = ({ children }: { children: ReactNode }) => {
         if(arr[1] === "movie" && arr[2] === "p") setShow(true);
     }, [pathname])
 
-    return show ? (<><div className="flex gap-3">
-        <Filter />
-        <div className={`duration-300 w-full ${collapse ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[calc(100vw-0.5rem)] md:ml-[250px]" : "visible"}`}>
+    return show ? (<><div className="flex">
+        { !keyword && <Filter /> }
+        <div className={`duration-300 w-full ${(collapse && !keyword) ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[100vw] md:ml-[250px]" : "visible"}`}>
             <Header />
             {children}
             <Footer />

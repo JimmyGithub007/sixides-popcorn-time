@@ -28,34 +28,36 @@ const fetchJSON = async (url: string) => {
     }
 }
 
-const getMovieCasts = async (id: number) => {
-    return (await fetchJSON(`${API_URL}movie/${id}/credits`)).cast;
+const searhMovie = async ({ page, keyword }: movieAPIProps) => {//get movies listing by search keyword
+    const url = `${API_URL}search/movie?query=${keyword}&page=${page}`;
+    return await fetchJSON(url);
 }
 
-const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }: movieAPIProps) => {
+const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }: movieAPIProps) => {//get movies listing by filter
     const url = `${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${startScore}&vote_average.lte=${endScore}&sort_by=${sortId}`;
     return await fetchJSON(url);
 }
 
 const getMovies = async (props: movieAPIProps) => {
-    const { page } = props;
-    const resp = await getMoviesPerPage({...props, page: 1});
+    const { page, keyword } = props;
+    const hasKeyword = !!keyword;
+    const resp =  hasKeyword ? await searhMovie({...props, page: 1}) : await getMoviesPerPage({...props, page: 1});
     let newPage: number = page*(resp.total_pages/(resp.total_pages*totalPerPage/newTotalPerPage));//cal return the new page number if want 30 per page
     let secondPage: number = newPage;
     let movies: movieStatesProps[];
     if(!!(newPage % 1)) { 
         newPage = Math.trunc(newPage);
         secondPage = Math.trunc(newPage+1);
-        const resp1 = await getMoviesPerPage({...props, page: newPage});
-        const resp2 = await getMoviesPerPage({...props, page: secondPage});
+        const resp1 = hasKeyword ? await searhMovie({...props, page: newPage}) : await getMoviesPerPage({...props, page: newPage});
+        const resp2 = hasKeyword ? await searhMovie({...props, page: secondPage}) : await getMoviesPerPage({...props, page: secondPage});
 
         const nextPageMovies = resp2.results.slice(0, 10);
         movies = resp1.results.concat(nextPageMovies);
     }
     else { 
         secondPage-=1; 
-        const resp1 = await getMoviesPerPage({...props, page: secondPage});
-        const resp2 = await getMoviesPerPage({...props, page: newPage});
+        const resp1 = hasKeyword ? await searhMovie({...props, page: secondPage}) : await getMoviesPerPage({...props, page: secondPage});
+        const resp2 = hasKeyword ? await searhMovie({...props, page: newPage}) : await getMoviesPerPage({...props, page: newPage});
 
         const previousPageMovies = resp1.results.slice(10);
         movies = previousPageMovies.concat(resp2.results);
@@ -64,8 +66,12 @@ const getMovies = async (props: movieAPIProps) => {
     return {
         "success": true,
         "results": movies,
-        "total_pages": Math.ceil(resp.total_pages*totalPerPage/newTotalPerPage),
+        "total_pages": Math.ceil(resp.total_results/newTotalPerPage),
     }
+}
+
+const getMovieCasts = async (id: number) => {
+    return (await fetchJSON(`${API_URL}movie/${id}/credits`)).cast;
 }
 
 const getGenres = async () => {
