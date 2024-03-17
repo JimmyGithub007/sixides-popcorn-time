@@ -1,25 +1,18 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { Filter, Footer, Header, Modal } from ".";
-import { usePathname, useSearchParams } from "next/navigation";
-import { IoIosArrowUp } from "react-icons/io";
-import { RootState } from "@/store";
+import { ReactNode } from "react";
 import { useSelector } from "react-redux";
+import { IoIosArrowUp } from "react-icons/io";
+import { useSearchParams } from "next/navigation";
+import { RootState } from "@/store";
+import { Filter, Footer, Header, Modal } from ".";
 
 const Shell = ({ children }: { children: ReactNode }) => {
-    const pathname = usePathname();
     const searchParams = useSearchParams();
     const keyword = searchParams.get("keyword");
     const { scrollY, collapse } = useSelector((state: RootState) => state.window);
-    const [ show, setShow ] = useState<boolean>(false);
 
-    useEffect(() => {
-        const arr: string[] = pathname.split("/");
-        if(arr[1] === "movie" && arr[2] === "p") setShow(true);
-    }, [pathname])
-
-    return show ? (<><div className="flex">
+    return (<><div className="flex">
         { !keyword && <Filter /> }
         <div className={`duration-300 w-full ${(collapse && !keyword) ? "overflow-x-hidden sm:overflow-x-clip invisible md:visible ml-[100vw] md:ml-[250px]" : "visible"}`}>
             <Header />
@@ -28,7 +21,7 @@ const Shell = ({ children }: { children: ReactNode }) => {
         </div>
     </div>
     <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' }) } className={`${scrollY > 0 ? "opacity-100 visible" : "opacity-0 invisible"} fixed bottom-4 right-4 text-4xl rounded-full bg-yellow-400 text-white p-2 shadow-md hover:bg-yellow-300 duration-300`}><IoIosArrowUp  /></button>
-    <Modal /></>) : children;
+    <Modal /></>);
 }
 
 export default Shell;

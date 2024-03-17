@@ -14,7 +14,7 @@ const PageNotFound = (props: Props) => {
             </div>
             <PiPopcornDuotone className="absolute text-8xl rotate-12 bottom-20 text-yellow-400" />
             <h1 className="font-bold text-8xl z-10 -rotate-3">404</h1>
-            <Link href="/movie/p/1"><button className="rotate-3 text-yellow-500 hover:text-yellow-400 font-bold text-lg duration-200">Go back to movie list</button></Link>
+            <Link href="/movie?page=1"><button className="rotate-3 text-yellow-500 hover:text-yellow-400 font-bold text-lg duration-200">Go back to movie list</button></Link>
         </div>
     </main>
   );

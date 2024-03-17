@@ -3,7 +3,9 @@ import filterReducer from "./slice/filterSlice";
 import movieReducer from "./slice/movieSlice";
 import moviesReducer from "./slice/moviesSlice";
 import genresReducer from "./slice/genresSlice";
-import windowSlice from "./slice/windowSlice";
+import windowReducer from "./slice/windowSlice";
+import pageReducer from "./slice/pageSlice";
+import userReducer from "./slice/userSlice";
 
 const store = configureStore({
     reducer: {
@@ -11,8 +13,9 @@ const store = configureStore({
         movie: movieReducer,
         movies: moviesReducer,
         genres: genresReducer,
-        window: windowSlice
-
+        window: windowReducer,
+        page: pageReducer,
+        user: userReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

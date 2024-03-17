@@ -1,10 +1,15 @@
 'use client';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { MdOutlineFavorite } from "react-icons/md";
 import { motion } from "framer-motion"
 import { RootState } from "@/store";
 import { movieStatesProps, setMovie } from "@/store/slice/movieSlice";
+import { db } from '@/app/firebase/config';
+import { setWatchList } from '@/store/slice/userSlice';
+import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { Loading, Pagination, Rating } from ".";
+
 import Image from "next/image";
 import PageNotFound from "@/app/not-found";
 
@@ -13,7 +18,30 @@ const Listing = () => {
 
     const { genres } = useSelector((state: RootState) => state.genres);
     const { openSearchBar } = useSelector((state: RootState) => state.filter);
+    const { uid, movies_ids } = useSelector((state: RootState) => state.user);
     const { movies, loading } = useSelector((state: RootState) => state.movies);
+
+    const saveMovieToWatchListAPI = async (mid: number) => {
+        const userProfileQuery = await getDocs(query(collection(db, "user_profiles"), where("uid", "==", uid)));
+        userProfileQuery.forEach(async (doc) => {
+            try {
+                let movies_ids_arr: number[] = [];
+                if(movies_ids) {
+                    if(!movies_ids.includes(mid)){ movies_ids_arr = [...movies_ids, mid]; }
+                    else { movies_ids_arr = movies_ids.filter(e => e != mid); }
+                } else {
+                    movies_ids_arr.push(mid);
+                }
+                dispatch(setWatchList(movies_ids_arr));
+
+                await updateDoc(doc.ref, {
+                    movies_ids: movies_ids_arr
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    }
 
     const MovieDiv = (value: movieStatesProps, key: number) => {
         return <motion.div
@@ -33,9 +61,10 @@ const Listing = () => {
                 }
             }}
             viewport={{ once: true }}
-            key={key} className={`w-[150px] md:w-[160px] lg:w-[180px] xl:w-[200px]`}
+            key={key} className={`relative w-[150px] md:w-[160px] lg:w-[180px] xl:w-[200px]`}
         >
             <Image alt={value.title} width={220} height={330} onClick={() => dispatch(setMovie({ ...value }))} className="cursor-pointer rounded-lg shadow-lg duration-300 hover:scale-105" src={`${process.env.NEXT_PUBLIC_POSTER_API}w220_and_h330_face/${value.poster_path}`} />
+            { uid != "" && <button onClick={() => saveMovieToWatchListAPI(value.id) } className={`absolute duration-200 top-2 right-2 ${movies_ids?.includes(value.id) ? "text-3xl text-yellow-400" : "text-2xl text-white"}`}><MdOutlineFavorite /></button> }
             <div className="flex flex-col gap-1 pt-2">
                 <div className="font-bold text-black text-sm sm:text-md flex flex-wrap gap-1 pb-2">{
                     value.genre_ids.map((value2) =>
