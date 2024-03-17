@@ -38,6 +38,10 @@ const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }
     return await fetchJSON(url);
 }
 
+const getMovie = async (id: number) => {
+    return await fetchJSON(`${API_URL}movie/${id}`);
+}
+
 const getMovies = async (props: movieAPIProps) => {
     const { page, keyword } = props;
     const hasKeyword = !!keyword;
@@ -83,6 +87,7 @@ const getMovieImages = async (id: number) => {
 }
 
 export {
+    getMovie,
     getMovies,
     getMovieCasts,
     getGenres,

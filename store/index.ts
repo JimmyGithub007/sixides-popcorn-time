@@ -6,6 +6,7 @@ import genresReducer from "./slice/genresSlice";
 import windowReducer from "./slice/windowSlice";
 import pageReducer from "./slice/pageSlice";
 import userReducer from "./slice/userSlice";
+import alertReducer from "./slice/alertSlice";
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         window: windowReducer,
         page: pageReducer,
         user: userReducer,
+        alert: alertReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

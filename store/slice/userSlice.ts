@@ -4,6 +4,8 @@ interface userStatesProps {
     uid: string,
     username: string,
     email: string,
+    language?: string,
+    country?: string,
     movies_ids?: number[],
     keywords?: string[]
 }
@@ -12,6 +14,8 @@ export const initialState: userStatesProps = {
     uid: "",
     username: "",
     email: "",
+    language: "",
+    country: "",
     movies_ids: [],
     keywords: []
 };
@@ -23,6 +27,8 @@ export const userSlice = createSlice({
             state.uid = action.payload.uid;
             state.username = action.payload.username;
             state.email = action.payload.email;
+            state.language = action.payload.language;
+            state.country = action.payload.country;
         },
         setWatchList: (state, action: PayloadAction<number[]>) => {
             state.movies_ids = action.payload

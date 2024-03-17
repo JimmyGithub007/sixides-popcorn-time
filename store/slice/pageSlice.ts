@@ -8,7 +8,7 @@ const initialState: pageStatesProps = {
     loading: true,
 };
 
-export const windowSlice = createSlice({
+export const pageSlice = createSlice({
     name: "page",
     initialState,
     reducers: {
@@ -18,5 +18,5 @@ export const windowSlice = createSlice({
     },
 });
 
-export const { setLoading } = windowSlice.actions;
-export default windowSlice.reducer;
+export const { setLoading } = pageSlice.actions;
+export default pageSlice.reducer;

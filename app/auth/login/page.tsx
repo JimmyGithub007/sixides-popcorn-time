@@ -5,11 +5,13 @@ import { useDispatch } from "react-redux";
 import { PiPopcornDuotone } from "react-icons/pi";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from '../../firebase/config';
 import { useRouter } from "next/navigation";
 import { setLoading } from "@/store/slice/pageSlice";
 import { motion } from "framer-motion"
+import { setAlert } from "@/store/slice/alertSlice";
+import { RootShell } from "@/components";
 import withHOC from "@/hoc/withHOC";
 
 type Inputs = {
@@ -41,30 +43,68 @@ const Login = () => {
 
     const password = watch("password");
 
-    const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        dispatch(setLoading(true));
+    const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
         if (type === "sign up") {
             try {
-                const resp = await createUserWithEmailAndPassword(auth, data.email, data.password);
-                await addDoc(collection(db, "user_profiles"), {
-                    uid: resp.user.uid,
-                    username: data.username,
-                })
-                setType("sign in");
-            } catch (error) {
-                console.error("Error creating user:", error);
+                const userProfileQuery = await getDocs(query(collection(db, "user_profiles"), where("username", "==", data.username)));
+                if(!userProfileQuery.empty) {
+                    dispatch(setAlert({
+                        type: "error",
+                        message: "Username already in use!"
+                    }));
+                } else {
+                    try {
+                        const resp = await createUserWithEmailAndPassword(auth, data.email, data.password);
+                        try {
+                            await addDoc(collection(db, "user_profiles"), {
+                                uid: resp.user.uid,
+                                username: data.username,
+                                language: "",
+                                country: "",
+                                keywords: [],
+                                movies_ids: []
+                            })
+
+                            dispatch(setAlert({
+                                type: "success",
+                                message: "Account created successfully!"
+                            }));
+                            setType("sign in");
+                        } catch (error: any) {
+                            throw error;
+                        }
+                    } catch (error: any) {
+                        throw error;
+                    }
+                }
+            } catch (error: any) {
+                if(error.code == "auth/email-already-in-use") {
+                    dispatch(setAlert({
+                        type: "error",
+                        message: "Email is already in use!"
+                    }));
+                }
             }
         } else {
             try {
                 await signInWithEmailAndPassword(auth, data.email, data.password);
+                dispatch(setLoading(true));
+                dispatch(setAlert({
+                    type: "success",
+                    message: "Welcome to SIXiDES POPCORN TIME!"
+                }));
                 router.push("/movie?page=1");
             } catch (error) {
-                console.error("Error signing in:", error);
+                dispatch(setLoading(false));
+                dispatch(setAlert({
+                    type: "error",
+                    message: "Invalid user email/password!"
+                }));
             }
         }
     }
 
-    return (
+    return (<RootShell>
         <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,7 +124,7 @@ const Login = () => {
                 <div className={`${type == "sign up" ? "opacity-100" : "opacity-0"} duration-300 flex relative`}>
                     <input className="px-2 py-1 rounded-sm w-full" placeholder="USERNAME" {...register("username",
                         {
-                            required: type == "sign up" || false
+                            required: type == "sign up" ? "Username is required" : false
                         },
                     )} />
                     {errors.username && <span className="absolute font-bold text-red-600 text-sm top-8">{errors.username.message}</span>}
@@ -102,11 +142,20 @@ const Login = () => {
                     {errors.email && <span className="absolute font-bold text-red-600 text-sm top-8">{errors.email.message}</span>}
                 </div>
                 <div className="flex relative">
-                    <input className="px-2 py-1 rounded-sm w-full" placeholder="PASSWORD" {...register("password", { required: true })} />
-                    {errors.password && <span className="absolute font-bold text-red-600 text-sm top-8">Password is required!</span>}
+                    <input type="password" className="px-2 py-1 rounded-sm w-full" placeholder="PASSWORD" 
+                        {   ...register("password", 
+                            { 
+                                required: "Password is required",
+                                minLength: {
+                                    value: 6,
+                                    message: "Password must be at least 6 characters long",
+                                },
+                            }
+                    )} />
+                    {errors.password && <span className="absolute font-bold text-red-600 text-sm top-8">{errors.password.message}</span>}
                 </div>
                 <div className={`${type == "sign up" ? "opacity-100" : "opacity-0"} duration-300 flex relative`}>
-                    <input className="px-2 py-1 rounded-sm w-full" placeholder="CONFIRM PASSWORD" {...register("confirm_password",
+                    <input type="password" className="px-2 py-1 rounded-sm w-full" placeholder="CONFIRM PASSWORD" {...register("confirm_password",
                         {
                             validate: value => (type == "sign in") || (type == "sign up" && value === password) || "Passwords do not match",
                         },
@@ -121,14 +170,14 @@ const Login = () => {
             <div className={`${type == "sign up" ? "sm:rounded-l-md sm:left-[calc(50%-300px)] top-[70%] sm:top-auto" : "sm:rounded-r-md sm:left-[50%] top-auto"} absolute duration-200 flex flex-col gap-2 h-[30%] items-center justify-center px-8 w-full sm:bg-yellow-400 sm:h-[450px] sm:shadow-md sm:w-[300px]`}>
                 <h1 className="font-bold text-black text-center text-2xl sm:text-3xl">{type == "sign in" ? "Don't" : "Already"} hava an account?</h1>
                 <span className="text-sm">{type == "sign in" ? "start your journal in one click" : "Sign in with your email and password"}</span>
-                <button onClick={() => { reset(); setType(type == "sign up" ? "sign in" : "sign up"); }} className="bg-black font-bold px-2 py-1 rounded-sm shadow-lg text-white w-full">SIGN {type == "sign in" ? "UP" : "IN"}</button>
-                <button onClick={() => {
+                <button type="button" onClick={() => { reset(); setType(type == "sign up" ? "sign in" : "sign up"); }} className="bg-black font-bold px-2 py-1 rounded-sm shadow-lg text-white w-full">SIGN {type == "sign in" ? "UP" : "IN"}</button>
+                <button type="button" onClick={() => {
                     dispatch(setLoading(true));
                     router.push("/movie?page=1");
-                }} type="button" className={`${type == "sign in" ? "opacity-100 hover:opacity-80" : "opacity-0 invisible"} duration-100 font-bold text-xs text-black underline`}>Or you can directly jump to movies list!</button>
+                }} className={`${type == "sign in" ? "opacity-100 hover:opacity-80" : "opacity-0 invisible"} duration-100 font-bold text-xs text-black underline`}>Or you can directly jump to movies list!</button>
             </div>
         </motion.div>
-    )
+    </RootShell>)
 }
 
 export default withHOC(Login);

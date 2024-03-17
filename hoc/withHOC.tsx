@@ -71,6 +71,8 @@ const withHOC = (Component: React.ComponentType<Props>) => {
                 uid: user.uid,
                 username: userProfiles.username,
                 email: user.email,
+                language: user.language,
+                country: user.country
             }));
             dispatch(setWatchList(userProfiles.movies_ids));
             dispatch(setKeywords(userProfiles.keywords));
@@ -109,7 +111,11 @@ const withHOC = (Component: React.ComponentType<Props>) => {
                 }
             };
 
-            onAuthStateChanged(auth, handleAuthStateChanged);
+            const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+
+            return () => {
+                unsubscribe();
+            };
         }, [pathname]);
 
         // Return the component with props

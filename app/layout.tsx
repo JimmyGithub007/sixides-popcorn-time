@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import { StoreProvider } from "@/store/StoreProvider";
-import Shell from "@/components/Shell";
 import "./globals.css";
 
 const inter = Ubuntu({ subsets: ["latin"], weight: '400' });
