@@ -8,17 +8,18 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { MdOutlineScreenSearchDesktop } from "react-icons/md";
 import { PiPopcornDuotone } from "react-icons/pi";
+import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { db } from "@/app/firebase/config";
 import { RootState } from "@/store";
 import { setKeyword, setOpenSearchBar } from "@/store/slice/filterSlice";
-import { setCollapse } from "@/store/slice/windowSlice";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import { setLoading } from "@/store/slice/pageSlice";
-import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { db } from "@/app/firebase/config";
+import { setCollapse } from "@/store/slice/windowSlice";
 import { setKeywords } from "@/store/slice/userSlice";
-import Dropdown from "./Dropdown";
+import dynamic from "next/dynamic";
+
+const Dropdown = dynamic(() => import('./Dropdown'));
 
 const Header = () => {
     const router = useRouter();
@@ -65,19 +66,19 @@ const Header = () => {
         }
     }, [user])
 
-    return (<><motion.div
+    return (<motion.div
         id="header"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className={`${scrollY > 0 ? "bg-white pl-3 sm:pl-6" : "bg-black pl-6 shadow-lg text-yellow-300 sm:pl-12"} duration-300 font-bold flex flex-row gap-2 h-16 items-center justify-between pr-6 relative sticky top-0 z-10`}>
         <div className="flex flex-row gap-2 items-center">
             {!queryKeyword && <BsArrowLeftCircleFill className={`${scrollY > 0 ? "text-black shadow-lg rounded-full" : "text-white"} cursor-pointer duration-300 text-3xl ${!collapse && "rotate-180"}`} onClick={() => dispatch(setCollapse(!collapse))} />}
-            <PiPopcornDuotone className={`${scrollY > 0 ? "-rotate-12" : "rotate-12"} transform text-4xl duration-[400ms]`} />
+            <PiPopcornDuotone className={`${scrollY > 0 ? "-rotate-12" : "rotate-12"} duration-[400ms] text-4xl transform`} />
             <span className="text-sm md:text-lg">SIXiDES POPCORN TIME</span>
         </div>
-        <div className="flex flex-row items-center gap-3 duration-300">
+        <div className="duration-300 flex flex-row items-center gap-3">
             {   isLogin ? <Dropdown>
-                    <div className={`${scrollY > 0 ? "text-black shadow-lg rounded-full" : "text-white"} text-3xl cursor-pointer`}><FaUserCircle /></div>
+                    <div className={`${scrollY > 0 ? "rounded-full shadow-lg text-black" : "text-white"} cursor-pointer text-3xl`}><FaUserCircle /></div>
                 </Dropdown> :
                 <button onClick={() => {
                     dispatch(setLoading(true));
@@ -89,7 +90,7 @@ const Header = () => {
         </div>
         <AnimatePresence>
             {openSearchBar &&
-                <motion.div id="searchBar" className={`bg-black h-12 flex flex-row items-center font-bold gap-2 absolute top-16 w-full right-0 pr-4`}
+                <motion.div id="searchBar" className={`absolute bg-black flex flex-row font-bold gap-2 h-12 items-center pr-4 right-0 top-16 w-full`}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
@@ -100,18 +101,17 @@ const Header = () => {
                 >
                     <input onKeyDown={(e) => { if (e.key === "Enter" && !loading && keyword) router.push("/movie?page=1&keyword=" + keyword); }} value={keyword || ""} onChange={e => {
                         dispatch(setKeyword(e.target.value));
-                    }} className="bg-black text-white h-12 text-right w-full focus:outline-none px-4" placeholder="Search for a movie name" />
+                    }} className="bg-black h-12 focus:outline-none px-4 text-right text-white w-full" placeholder="Search for a movie name" />
                     <button onClick={() => {
                         if (!loading && keyword) router.push("/movie?page=1&keyword=" + keyword);
-                    }} className={`${(loading || !keyword) ? "cursor-not-allowed opacity-50" : ""} relative bg-yellow-300 rounded-sm font-bold flex flex-row px-2 py-1 items-center text-black`}>
-                        <CiSearch className="text-xl" /> Search {loading && <span className="absolute -right-1 -top-1 animate-ping h-3 w-3 rounded-full bg-white"></span>}
+                    }} className={`${(loading || !keyword) ? "cursor-not-allowed opacity-50" : ""} bg-yellow-300 flex flex-row font-bold items-center px-2 py-1 relative rounded-sm text-black`}>
+                        <CiSearch className="text-xl" /> Search {loading && <span className="absolute animate-ping bg-white h-3 rounded-full -right-1 -top-1 w-3"></span>}
                     </button>
                     <button onClick={() => { if (!loading) { dispatch(setKeyword("")); dispatch(setOpenSearchBar(false)); router.push("/movie?page=" + page); } }} className={`${loading && "cursor-not-allowed opacity-50"} text-white font-bold text-xl`}><IoClose /></button>
                 </motion.div>
             }
         </AnimatePresence>
-    </motion.div>
-    </>)
+    </motion.div>)
 }
 
 export default Header;

@@ -5,7 +5,12 @@ import { useSelector } from "react-redux";
 import { IoIosArrowUp } from "react-icons/io";
 import { useSearchParams } from "next/navigation";
 import { RootState } from "@/store";
-import { RootShell, Filter, Footer, Header, Modal } from ".";
+import { RootShell } from ".";
+import dynamic from "next/dynamic";
+
+const Filter = dynamic(() => import('./Filter'));
+const Header = dynamic(() => import('./Header'));
+const Footer = dynamic(() => import('./Footer'));
 
 const Shell = ({ children }: { children: ReactNode }) => {
     const searchParams = useSearchParams();

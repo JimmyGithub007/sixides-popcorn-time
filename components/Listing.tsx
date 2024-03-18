@@ -3,15 +3,18 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { MdOutlineFavorite } from "react-icons/md";
 import { motion } from "framer-motion"
+import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { RootState } from "@/store";
 import { movieStatesProps, setMovie } from "@/store/slice/movieSlice";
 import { db } from '@/app/firebase/config';
 import { setWatchList } from '@/store/slice/userSlice';
-import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { Loading, Pagination, Rating } from ".";
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
-import Image from "next/image";
-import PageNotFound from "@/app/not-found";
+const Loading = dynamic(() => import('./Loading'));
+const Rating = dynamic(() => import('./Rating'));
+const Pagination = dynamic(() => import('./Pagination'));
+const PageNotFound = dynamic(() => import('@/app/not-found'));
 
 const Listing = () => {
     const dispatch = useDispatch();

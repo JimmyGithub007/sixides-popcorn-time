@@ -12,8 +12,10 @@ import { getGenres } from "@/utils";
 import { changeGenreId, changeSort, setFilter } from "@/store/slice/filterSlice";
 import { genresStatesProps, setGenres } from "@/store/slice/genresSlice";
 import { setCollapse } from "@/store/slice/windowSlice";
-import Skeleton from "./Skeleton";
-import Range from "./Range";
+import dynamic from "next/dynamic";
+
+const Range = dynamic(() => import('./Range'))
+const Skeleton = dynamic(() => import('./Skeleton'))
 
 const sortCategories: {
     id: string;

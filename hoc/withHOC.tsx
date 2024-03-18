@@ -1,16 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
+import { usePathname, useRouter } from "next/navigation";
 import { auth, db } from "@/app/firebase/config";
-import { Loading } from "@/components";
 import { RootState } from "@/store";
 import { setLoading } from "@/store/slice/pageSlice";
 import { setKeywords, setUser, setWatchList } from "@/store/slice/userSlice";
 import { setCollapse, setScrollY } from "@/store/slice/windowSlice";
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, getDoc, getDocs, limit, query, where } from "firebase/firestore";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import dynamic from "next/dynamic";
+
+const Loading = dynamic(() => import('@/components/Loading'));
 
 type Props = any;
 
@@ -69,10 +71,10 @@ const withHOC = (Component: React.ComponentType<Props>) => {
         const dispatchUserData = (user: any, userProfiles: any) => {
             dispatch(setUser({
                 uid: user.uid,
-                username: userProfiles.username,
                 email: user.email,
-                language: user.language,
-                country: user.country
+                username: userProfiles.username,
+                language: userProfiles.language,
+                country: userProfiles.country
             }));
             dispatch(setWatchList(userProfiles.movies_ids));
             dispatch(setKeywords(userProfiles.keywords));
