@@ -1,16 +1,19 @@
 "use client";
 
-import { TbUserQuestion } from "react-icons/tb";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IoIosClose } from "react-icons/io";
+import { TbUserQuestion } from "react-icons/tb";
 import { motion, AnimatePresence  } from "framer-motion"
-import { Loading, Rating } from ".";
-import { getMovieCasts, getMovieImages } from "@/utils";
-import { initialState, movieStatesProps, setMovie } from "@/store/slice/movieSlice";
 import { RootState } from "@/store";
+import { initialState, movieStatesProps, setMovie } from "@/store/slice/movieSlice";
+import { getMovieCasts, getMovieImages } from "@/utils";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Poster from "./Poster";
+
+const Loading = dynamic(() => import('./Loading'));
+const Rating = dynamic(() => import('./Rating'));
 
 interface Cast {
     id: number,
@@ -62,7 +65,7 @@ const Modal = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }} 
-            className={`fixed w-screen h-screen bg-black/30 top-0 z-20 duration-200 overflow-y-auto overflow-x-hidden`}>
+            className={`bg-black/30 duration-200 fixed h-screen overflow-x-hidden overflow-y-auto top-0 w-screen z-20`}>
             <motion.div
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -1,16 +1,28 @@
 "use client";
 
-import { RootState } from "@/store";
-import { setCollapse, setScrollY } from "@/store/slice/windowSlice";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
+import { usePathname, useRouter } from "next/navigation";
+import { auth, db } from "@/app/firebase/config";
+import { RootState } from "@/store";
+import { setLoading } from "@/store/slice/pageSlice";
+import { setKeywords, setUser, setWatchList } from "@/store/slice/userSlice";
+import { setCollapse, setScrollY } from "@/store/slice/windowSlice";
+import dynamic from "next/dynamic";
+
+const Loading = dynamic(() => import('@/components/Loading'));
 
 type Props = any;
 
 const withHOC = (Component: React.ComponentType<Props>) => {
     const WithHOC = (props: Props) => {
         const dispatch = useDispatch();
+        const router = useRouter();
+        const pathname = usePathname();
         const { collapse } = useSelector((state: RootState) => state.window);
+        const { loading } = useSelector((state: RootState) => state.page);
 
         // Event listener callbacks
         const handleScrollChange = () => {
@@ -50,7 +62,66 @@ const withHOC = (Component: React.ComponentType<Props>) => {
             }
         }, [collapse])
 
+        const getUserProfile = async (uid: string) => {
+            const userProfilesQuery = query(collection(db, "user_profiles"), where("uid", "==", uid), limit(1));
+            const userProfilesSnapshot = await getDocs(userProfilesQuery);
+            return !userProfilesSnapshot.empty ? userProfilesSnapshot.docs[0].data() : null;
+        };
+
+        const dispatchUserData = (user: any, userProfiles: any) => {
+            dispatch(setUser({
+                uid: user.uid,
+                email: user.email,
+                username: userProfiles.username,
+                language: userProfiles.language,
+                country: userProfiles.country
+            }));
+            dispatch(setWatchList(userProfiles.movies_ids));
+            dispatch(setKeywords(userProfiles.keywords));
+        };
+
+        useEffect(() => {
+            const handleAuthStateChanged = async (user: any) => {
+                if (pathname.includes("/auth/profile")) {
+                    if (user) {
+                        const user_profiles = await getUserProfile(user.uid);
+
+                        if (user_profiles) {
+                            dispatchUserData(user, user_profiles);
+                            dispatch(setLoading(false));
+                        } else {
+                            router.push("/auth/login");
+                        }
+                    } else {
+                        router.push("/auth/login");
+                    }
+                } else if (pathname.includes("/auth/login")) {
+                    if (user) {
+                        router.push("/movie?page=1");
+                    } else {
+                        dispatch(setLoading(false));
+                    }
+                } else {
+                    if(user) {
+                        const user_profiles = await getUserProfile(user.uid);
+
+                        if (user_profiles) {
+                            dispatchUserData(user, user_profiles);
+                        }
+                    }
+                    dispatch(setLoading(false));
+                }
+            };
+
+            const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+
+            return () => {
+                unsubscribe();
+            };
+        }, [pathname]);
+
         // Return the component with props
+        if(loading) return <div className="flex items-center justify-center h-screen w-screen"><Loading /></div>
         return <Component {...props} />;
     };
 

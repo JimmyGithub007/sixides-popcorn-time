@@ -1,5 +1,6 @@
 import { filterStatesProps } from "@/store/slice/filterSlice";
 import { movieStatesProps } from "@/store/slice/movieSlice";
+import moment from "moment";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const API_URL = process.env.NEXT_PUBLIC_MOVIE_API;
@@ -28,34 +29,43 @@ const fetchJSON = async (url: string) => {
     }
 }
 
-const getMovieCasts = async (id: number) => {
-    return (await fetchJSON(`${API_URL}movie/${id}/credits`)).cast;
-}
-
-const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }: movieAPIProps) => {
-    const url = `${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${startScore}&vote_average.lte=${endScore}&sort_by=${sortId}`;
+const searhMovie = async ({ page, keyword }: movieAPIProps) => {//get movies listing by search keyword
+    const url = `${API_URL}search/movie?query=${keyword}&page=${page}`;
     return await fetchJSON(url);
 }
 
+const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }: movieAPIProps) => {//get movies listing by filter
+    const max_date = moment().format("YYYY-MM-DD");
+    const min_date = moment().subtract(1, 'months').format("YYYY-MM-DD");
+    
+    const url = `${API_URL}discover/movie?include_adult=false&include_video=false&language=en-US&with_release_type=2|3&release_date.gte=${min_date}&release_date.lte=${max_date}&page=${page}&with_genres=${genreIds.join(",")}&vote_average.gte=${startScore}&vote_average.lte=${endScore}&sort_by=${sortId}`;
+    return await fetchJSON(url);
+}
+
+const getMovie = async (id: number) => {
+    return await fetchJSON(`${API_URL}movie/${id}`);
+}
+
 const getMovies = async (props: movieAPIProps) => {
-    const { page } = props;
-    const resp = await getMoviesPerPage({...props, page: 1});
+    const { page, keyword } = props;
+    const hasKeyword = !!keyword;
+    const resp =  hasKeyword ? await searhMovie({...props, page: 1}) : await getMoviesPerPage({...props, page: 1});
     let newPage: number = page*(resp.total_pages/(resp.total_pages*totalPerPage/newTotalPerPage));//cal return the new page number if want 30 per page
     let secondPage: number = newPage;
     let movies: movieStatesProps[];
     if(!!(newPage % 1)) { 
         newPage = Math.trunc(newPage);
         secondPage = Math.trunc(newPage+1);
-        const resp1 = await getMoviesPerPage({...props, page: newPage});
-        const resp2 = await getMoviesPerPage({...props, page: secondPage});
+        const resp1 = hasKeyword ? await searhMovie({...props, page: newPage}) : await getMoviesPerPage({...props, page: newPage});
+        const resp2 = hasKeyword ? await searhMovie({...props, page: secondPage}) : await getMoviesPerPage({...props, page: secondPage});
 
         const nextPageMovies = resp2.results.slice(0, 10);
         movies = resp1.results.concat(nextPageMovies);
     }
     else { 
         secondPage-=1; 
-        const resp1 = await getMoviesPerPage({...props, page: secondPage});
-        const resp2 = await getMoviesPerPage({...props, page: newPage});
+        const resp1 = hasKeyword ? await searhMovie({...props, page: secondPage}) : await getMoviesPerPage({...props, page: secondPage});
+        const resp2 = hasKeyword ? await searhMovie({...props, page: newPage}) : await getMoviesPerPage({...props, page: newPage});
 
         const previousPageMovies = resp1.results.slice(10);
         movies = previousPageMovies.concat(resp2.results);
@@ -64,8 +74,12 @@ const getMovies = async (props: movieAPIProps) => {
     return {
         "success": true,
         "results": movies,
-        "total_pages": Math.ceil(resp.total_pages*totalPerPage/newTotalPerPage),
+        "total_pages": Math.ceil(resp.total_results/newTotalPerPage),
     }
+}
+
+const getMovieCasts = async (id: number) => {
+    return (await fetchJSON(`${API_URL}movie/${id}/credits`)).cast;
 }
 
 const getGenres = async () => {
@@ -77,6 +91,7 @@ const getMovieImages = async (id: number) => {
 }
 
 export {
+    getMovie,
     getMovies,
     getMovieCasts,
     getGenres,

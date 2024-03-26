@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 
 const Home = () => {
-  redirect('/movie/p/1');
+  redirect('/movie?page=1');
 
-  return (<></>);
+  return null;
 }
 
 export default Home;

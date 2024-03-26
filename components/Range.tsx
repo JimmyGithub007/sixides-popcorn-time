@@ -19,14 +19,14 @@ const Range = () => {
             let containerWidth = rangeContainerRef.current?.offsetWidth || 0;
             containerWidth -= 16;
             const newPos = Math.min(Math.min(Math.max((clientX - 16), 0), containerWidth), endScorePos - 16);
-            const start = newPos * (10 / containerWidth);
+            const start = Math.round(newPos * (10 / containerWidth));
             dispatch(changeStartScore(start));
         }
         if (isPressEnd) {
             let containerWidth = rangeContainerRef.current?.offsetWidth || 0;
             containerWidth -= 16;
             const newPos = Math.max(Math.min(Math.max((clientX - 16), 0), containerWidth), startScorePos + 16);
-            const end = newPos * (10 / containerWidth);
+            const end = Math.round(newPos * (10 / containerWidth));
             dispatch(changeEndScore(end));
         }
     };
@@ -62,8 +62,8 @@ const Range = () => {
         let containerWidth = rangeContainerRef.current?.offsetWidth || 0;
         if (containerWidth > 0) {
             containerWidth -= 16;
-            const newStartScorePos = startScore * (containerWidth / 10);
-            const newEndScorePos = endScore * (containerWidth / 10);
+            const newStartScorePos = Math.round(startScore * (containerWidth / 10));
+            const newEndScorePos = Math.round(endScore * (containerWidth / 10));
 
             setStartScorePos(newStartScorePos);
             setEndScorePos(newEndScorePos);
@@ -73,8 +73,8 @@ const Range = () => {
     useLayoutEffect(() => {
         let containerWidth = rangeContainerRef.current?.offsetWidth || 0;
         containerWidth -= 16;
-        const newStartScorePos = startScore * (containerWidth / 10);
-        const newEndScorePos = endScore * (containerWidth / 10);
+        const newStartScorePos = Math.round(startScore * (containerWidth / 10));
+        const newEndScorePos = Math.round(endScore * (containerWidth / 10));
 
         setStartScorePos(newStartScorePos);
         setEndScorePos(newEndScorePos);
@@ -82,17 +82,17 @@ const Range = () => {
 
     return (<>
         <div className="w-48 text-sm">
-            <span>From <b>{(startScore).toFixed(1)}</b> to <b>{(endScore).toFixed(1)}</b></span>
+            <span>From <b>{startScore}</b> to <b>{endScore}</b></span>
         </div>
-        <div ref={rangeContainerRef} className="relative w-full h-2 bg-yellow-300 rounded-md duration-100 ">
+        <div ref={rangeContainerRef} className="relative w-full h-2 bg-yellow-300 rounded-md">
             <div className="absolute h-2 bg-yellow-500" style={{ left: `${startScorePos}px`, width: `${endScorePos - startScorePos}px` }}></div>
-            <button style={{ left: `${startScorePos}px` }} onMouseDown={() => setIsPressStart(true) } onTouchStart={() => setIsPressStart(true)} className="duration-100 rounded-full bg-yellow-500 shadow-md w-4 h-4 absolute -top-1" />
-            <button style={{ left: `${endScorePos}px` }} onMouseDown={() => setIsPressEnd(true) } onTouchStart={() => setIsPressEnd(true)} className="duration-100 rounded-full bg-yellow-500 shadow-md w-4 h-4 absolute -top-1" />
+            <button style={{ left: `${startScorePos}px` }} onMouseDown={() => setIsPressStart(true) } onTouchStart={() => setIsPressStart(true)} className="rounded-full bg-yellow-500 shadow-md w-4 h-4 absolute -top-1" />
+            <button style={{ left: `${endScorePos}px` }} onMouseDown={() => setIsPressEnd(true) } onTouchStart={() => setIsPressEnd(true)} className="rounded-full bg-yellow-500 shadow-md w-4 h-4 absolute -top-1" />
         </div>
         <div className="w-full flex justify-between font-bold text-sm">
-            <span>0.0</span>
-            <span>5.0</span>
-            <span>10.0</span>
+            <span>0</span>
+            <span>5</span>
+            <span>10</span>
         </div>
     </>);
 };
