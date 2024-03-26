@@ -52,6 +52,14 @@ const Header = () => {
         })
     }
 
+    const clearSearch = () => {
+        if (!loading) { 
+            dispatch(setKeyword("")); 
+            dispatch(setOpenSearchBar(false)); 
+            router.push("/movie?page=" + page); 
+        }
+    }
+
     useEffect(() => {
         if (queryKeyword) {
             dispatch(setOpenSearchBar(true));
@@ -71,7 +79,7 @@ const Header = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className={`${scrollY > 0 ? "bg-white pl-3 sm:pl-6" : "bg-black pl-6 shadow-lg text-yellow-300 sm:pl-12"} duration-300 font-bold flex flex-row gap-2 h-16 items-center justify-between pr-6 relative sticky top-0 z-10`}>
-        <div className="flex flex-row gap-2 items-center">
+        <div className="cursor-pointer flex flex-row gap-2 items-center" onClick={clearSearch}>
             {!queryKeyword && <BsArrowLeftCircleFill className={`${scrollY > 0 ? "text-black shadow-lg rounded-full" : "text-white"} cursor-pointer duration-300 text-3xl ${!collapse && "rotate-180"}`} onClick={() => dispatch(setCollapse(!collapse))} />}
             <PiPopcornDuotone className={`${scrollY > 0 ? "-rotate-12" : "rotate-12"} duration-[400ms] text-4xl transform`} />
             <span className="text-sm md:text-lg">SIXiDES POPCORN TIME</span>
@@ -107,7 +115,7 @@ const Header = () => {
                     }} className={`${(loading || !keyword) ? "cursor-not-allowed opacity-50" : ""} bg-yellow-300 flex flex-row font-bold items-center px-2 py-1 relative rounded-sm text-black`}>
                         <CiSearch className="text-xl" /> Search {loading && <span className="absolute animate-ping bg-white h-3 rounded-full -right-1 -top-1 w-3"></span>}
                     </button>
-                    <button onClick={() => { if (!loading) { dispatch(setKeyword("")); dispatch(setOpenSearchBar(false)); router.push("/movie?page=" + page); } }} className={`${loading && "cursor-not-allowed opacity-50"} text-white font-bold text-xl`}><IoClose /></button>
+                    <button onClick={clearSearch} className={`${loading && "cursor-not-allowed opacity-50"} text-white font-bold text-xl`}><IoClose /></button>
                 </motion.div>
             }
         </AnimatePresence>

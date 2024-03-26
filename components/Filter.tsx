@@ -22,8 +22,8 @@ const sortCategories: {
     name: string,
 }[] = [
     { "name": "Most popularity", "id": "popularity.desc"},
-    { "name": "Movie title A - Z", "id": "original_title.asc"},
-    { "name": "Movie title Z - A", "id": "original_title.desc"},
+    { "name": "Movie title A - Z", "id": "title.asc"},
+    { "name": "Movie title Z - A", "id": "title.desc"},
     { "name": "Release date from new to old", "id": "primary_release_date.desc"},
     { "name": "Release date from old to new", "id": "primary_release_date.asc"},
     { "name": "Rating from top to low", "id": "vote_average.desc"},

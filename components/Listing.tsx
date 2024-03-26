@@ -86,27 +86,15 @@ const Listing = () => {
         </motion.div>
     }
 
-    const gridDiv = (l1: number, l2: number, className: string, movies: movieStatesProps[]) => {
-        return Array.from({ length: l1 }, () => []).map((arr: number[], key: number) => (
-            arr = Array.from({ length: l2 }, (_, index) => (index*l1)+key)
-        )).map((arr: number[], key: number) => (
-            <div key={key} className={`flex-col gap-2 ${className}`}>
-                {   
-                    movies.filter((_, index) => arr.includes(index))?.map((value: movieStatesProps, key:number) => 
-                        MovieDiv(value, key)
-                    )
-                }
-            </div>                                
-        ))
-    }
-
     return (<div className={`${openSearchBar ? "pt-16" : "pt-8"} duration-300 flex flex-col items-center w-full pb-8 min-h-[calc(100vh-174px)] sm:min-h-[calc(100vh-256px)] justify-center`}>
         {   !loading ?
                 movies.length > 0 ?
                 <div className="grid gap-2 md:gap-3 lg:gap-4 xl:gap-2 grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-                    {   gridDiv(2, 15, "flex md:hidden", movies)    }
-                    {   gridDiv(3, 10, "hidden md:flex xl:hidden", movies)    }
-                    {   gridDiv(5, 6, "hidden xl:flex", movies)    }
+                    {   
+                        movies?.map((value: movieStatesProps, key:number) => 
+                            MovieDiv(value, key)
+                        )
+                    }
                 </div> : <PageNotFound page="listing" />
             : <Loading />
         }

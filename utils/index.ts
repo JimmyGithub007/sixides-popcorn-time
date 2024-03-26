@@ -1,5 +1,6 @@
 import { filterStatesProps } from "@/store/slice/filterSlice";
 import { movieStatesProps } from "@/store/slice/movieSlice";
+import moment from "moment";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const API_URL = process.env.NEXT_PUBLIC_MOVIE_API;
@@ -34,7 +35,10 @@ const searhMovie = async ({ page, keyword }: movieAPIProps) => {//get movies lis
 }
 
 const getMoviesPerPage = async ({ page, genreIds, startScore, endScore, sortId }: movieAPIProps) => {//get movies listing by filter
-    const url = `${API_URL}discover/movie?page=${page}&language=en-US&with_genres=${genreIds.join("|")}&vote_average.gte=${startScore}&vote_average.lte=${endScore}&sort_by=${sortId}`;
+    const max_date = moment().format("YYYY-MM-DD");
+    const min_date = moment().subtract(1, 'months').format("YYYY-MM-DD");
+    
+    const url = `${API_URL}discover/movie?include_adult=false&include_video=false&language=en-US&with_release_type=2|3&release_date.gte=${min_date}&release_date.lte=${max_date}&page=${page}&with_genres=${genreIds.join(",")}&vote_average.gte=${startScore}&vote_average.lte=${endScore}&sort_by=${sortId}`;
     return await fetchJSON(url);
 }
 
