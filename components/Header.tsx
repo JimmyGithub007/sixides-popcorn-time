@@ -79,10 +79,11 @@ const Header = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className={`${scrollY > 0 ? "bg-white pl-3 sm:pl-6" : "bg-black pl-6 shadow-lg text-yellow-300 sm:pl-12"} duration-300 font-bold flex flex-row gap-2 h-16 items-center justify-between pr-6 relative sticky top-0 z-10`}>
-        <div className="cursor-pointer flex flex-row gap-2 items-center" onClick={clearSearch}>
+        <div className="flex flex-row gap-2 items-center">
             {!queryKeyword && <BsArrowLeftCircleFill className={`${scrollY > 0 ? "text-black shadow-lg rounded-full" : "text-white"} cursor-pointer duration-300 text-3xl ${!collapse && "rotate-180"}`} onClick={() => dispatch(setCollapse(!collapse))} />}
-            <PiPopcornDuotone className={`${scrollY > 0 ? "-rotate-12" : "rotate-12"} duration-[400ms] text-4xl transform`} />
-            <span className="text-sm md:text-lg">SIXiDES POPCORN TIME</span>
+            <button className="flex items-center gap-2 text-sm md:text-lg" onClick={clearSearch}>
+                <PiPopcornDuotone className={`${scrollY > 0 ? "-rotate-12" : "rotate-12"} duration-[400ms] text-4xl transform`} /> SIXiDES POPCORN TIME
+            </button>
         </div>
         <div className="duration-300 flex flex-row items-center gap-3">
             {   isLogin ? <Dropdown>
